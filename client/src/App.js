@@ -1,25 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css'
+
+export default function App() {
+  useEffect(() => {
+    const backdrop = document.querySelector('.backdrop-overlay')
+    for (let i=0; i<79; i++) {
+      const div = document.createElement('div')
+      div.style.opacity = `${Math.random() * (0.075 - 0.025) + 0.025}`
+      backdrop.appendChild(div)
+    }
+  }, [])
+
+  return (<div></div>)
 }
-
-export default App;
