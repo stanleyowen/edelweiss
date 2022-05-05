@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
@@ -79,6 +79,6 @@ app.get("/", (req, res) => {
     .done();
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`);
 });
