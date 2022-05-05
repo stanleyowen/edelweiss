@@ -5,6 +5,8 @@ const port = 3000;
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 app.use((req, res, next) => {
+  res.header("Content-Type", "application/json; charset=UTF-8");
+
   const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
 
   const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
@@ -21,14 +23,13 @@ app.use((req, res, next) => {
     return next();
 
   res
-    .header("Content-Type", "application/json; charset=UTF-8")
     .set("WWW-Authenticate", 'Basic realm="401"')
     .status(401)
     .send(
       JSON.stringify(
         {
-          errorCode: 401,
-          error: "Unauthorized",
+          statusCode: 401,
+          code: "Unauthorized",
           message:
             "The pages you are trying to access requires authentication. Please try again.",
         },
