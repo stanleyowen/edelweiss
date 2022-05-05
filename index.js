@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
       body: process.env.TWILIO_MESSAGE.replace(/\\n/g, "\n"),
     })
     .then(() => {
-      return res.send(
+      return res.status(200).send(
         JSON.stringify(
           {
             statusCode: 200,
@@ -64,7 +64,7 @@ app.get("/", (req, res) => {
       );
     })
     .catch((err) => {
-      return res.send(
+      return res.status(500).send(
         JSON.stringify(
           {
             statusCode: 500,
