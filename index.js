@@ -39,7 +39,7 @@ app.use((req, res, next) => {
     );
 });
 
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
   const accountSID = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const client = require("twilio")(accountSID, authToken);
@@ -48,10 +48,10 @@ app.get("/", (_, res) => {
     .create({
       to: `whatsapp:${process.env.TWILIO_RECIPIENT_NUMBER}`,
       from: `whatsapp:${process.env.TWILIO_PHONE_NUMBER}`,
-      body: process.env.TWILIO_MESSAGE,
+      body: process.env.TWILIO_MESSAGE.replace(/\\n/g, "\n"),
     })
-    .then(() =>
-      res.send(
+    .then(() => {
+      return res.send(
         JSON.stringify(
           {
             statusCode: 200,
@@ -61,10 +61,10 @@ app.get("/", (_, res) => {
           null,
           2
         )
-      )
-    )
+      );
+    })
     .catch((err) => {
-      res.send(
+      return res.send(
         JSON.stringify(
           {
             statusCode: 500,
@@ -77,8 +77,6 @@ app.get("/", (_, res) => {
       );
     })
     .done();
-
-  res.send(process.env.TWILIO_MESSAGE.replace(/\\n/g, "\n"));
 });
 
 app.listen(port, () => {
