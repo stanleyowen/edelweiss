@@ -5,14 +5,19 @@ const port = 3000;
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 app.use((req, res, next) => {
-  const auth = { login: "yourlogins", password: "yourpassword" };
+  const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
 
   const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
   const [login, password] = Buffer.from(b64auth, "base64")
     .toString()
     .split(":");
 
-  if (login && password && login === auth.login && password === auth.password)
+  if (
+    login &&
+    password &&
+    login === HTTP_AUTH_USERNAME &&
+    password === HTTP_AUTH_PASSWORD
+  )
     return next();
 
   res
