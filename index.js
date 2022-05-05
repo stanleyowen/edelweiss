@@ -39,7 +39,7 @@ app.use((req, res, next) => {
     );
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   const accountSID = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const client = require("twilio")(accountSID, authToken);
