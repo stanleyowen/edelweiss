@@ -1,7 +1,7 @@
 {
-  "name": "whatsapp-sender",
+  "name": "edelweiss",
   "version": "1.0.0",
-  "description": "WhatsApp Sender",
+  "description": "Automation WhatsApp Bot using Twilio and Node",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
