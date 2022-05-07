@@ -13,7 +13,30 @@ app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
 app.use((req, res, next) => {
   res.header("Content-Type", "application/json; charset=UTF-8");
+  return next();
+});
 
+app.use(
+  rateLimit({
+    windowMs: 3600000, // 1 hour
+    max: 10,
+    handler: (req, res) =>
+      res.status(429).send(
+        JSON.stringify(
+          {
+            statusCode: 429,
+            code: "Too Many Requests",
+            message:
+              "We're sorry, but you have made too many requests to our servers. Please try again later.",
+          },
+          null,
+          2
+        )
+      ),
+  })
+);
+
+app.use((req, res, next) => {
   const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
 
   const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
