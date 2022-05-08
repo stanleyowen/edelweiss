@@ -70,7 +70,9 @@ app.use((req, res, next) => {
 });
 
 const messagesRouter = require("./routes/messages.route");
+const herokuRouter = require("./routes/heroku.route");
 app.use("/", messagesRouter);
+app.use("/heroku", herokuRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
