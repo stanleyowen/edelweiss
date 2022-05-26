@@ -41,38 +41,38 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
+// app.use((req, res, next) => {
+//   const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
 
-  const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
-  const [login, password] = Buffer.from(b64auth, "base64")
-    .toString()
-    .split(":");
+//   const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
+//   const [login, password] = Buffer.from(b64auth, "base64")
+//     .toString()
+//     .split(":");
 
-  if (
-    login &&
-    password &&
-    login === HTTP_AUTH_USERNAME &&
-    password === HTTP_AUTH_PASSWORD
-  )
-    return next();
+//   if (
+//     login &&
+//     password &&
+//     login === HTTP_AUTH_USERNAME &&
+//     password === HTTP_AUTH_PASSWORD
+//   )
+//     return next();
 
-  res
-    .set("WWW-Authenticate", 'Basic realm="401"')
-    .status(401)
-    .send(
-      JSON.stringify(
-        {
-          statusCode: 401,
-          code: "Unauthorized",
-          message:
-            "The pages you are trying to access requires authentication. Please try again.",
-        },
-        null,
-        2
-      )
-    );
-});
+//   res
+//     .set("WWW-Authenticate", 'Basic realm="401"')
+//     .status(401)
+//     .send(
+//       JSON.stringify(
+//         {
+//           statusCode: 401,
+//           code: "Unauthorized",
+//           message:
+//             "The pages you are trying to access requires authentication. Please try again.",
+//         },
+//         null,
+//         2
+//       )
+//     );
+// });
 
 const messagesRouter = require("./routes/messages.route");
 const herokuRouter = require("./routes/heroku.route");
