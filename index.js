@@ -4,6 +4,12 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const limiter = {
+  statusCode: 429,
+  code: "Too Many Requests",
+  message:
+    "We're sorry, but you have made too many requests to our servers. Please try again later.",
+};
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
@@ -19,20 +25,19 @@ app.use((req, res, next) => {
 app.use(
   rateLimit({
     windowMs: 3600000, // 1 hour
-    max: 10,
+    max: 100,
     handler: (req, res) =>
-      res.status(429).send(
-        JSON.stringify(
-          {
-            statusCode: 429,
-            code: "Too Many Requests",
-            message:
-              "We're sorry, but you have made too many requests to our servers. Please try again later.",
-          },
-          null,
-          2
-        )
-      ),
+      res.status(429).send(JSON.stringify(limiter, null, 2)),
+  })
+);
+
+app.use(
+  "/heroku",
+  rateLimit({
+    windowMs: 60000, // 1 minute
+    max: 60,
+    handler: (req, res) =>
+      res.status(429).send(JSON.stringify(limiter, null, 2)),
   })
 );
 
