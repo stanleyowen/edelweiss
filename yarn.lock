@@ -720,10 +720,10 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-twilio@^3.77.1:
-  version "3.77.1"
-  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.77.1.tgz#4550e3bd227c1b63761691f7816c22d86db4dcce"
-  integrity sha512-0G8HMwIwc7Wq2x7CdMIqjOE3/XXCwu2jnERXRCaLJTpDIi6CxVkaM9W8iCAyuISb3bPjvON+RWpLcDbTDARiTQ==
+twilio@^3.77.2:
+  version "3.77.2"
+  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.77.2.tgz#1b5b2dad625ae0002bf7b85a7d8cc69e9661f732"
+  integrity sha512-Q/JFbZzrb+1jTgBlwMkv3NwtGH0fT3BGJ3vG4LAuR8RPKK2d15SA9VGP588fHyoNQ26godOKi0ntPsaHV02ZqQ==
   dependencies:
     axios "^0.26.1"
     dayjs "^1.8.29"

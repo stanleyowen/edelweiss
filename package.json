@@ -15,6 +15,6 @@
     "express-rate-limit": "^6.4.0",
     "helmet": "^5.1.0",
     "heroku-client": "^3.1.0",
-    "twilio": "^3.77.1"
+    "twilio": "^3.77.2"
   }
 }
