@@ -9,8 +9,8 @@ const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 
 router.post("/webhooks", (req, res) => {
   const { text } = req.body.events[0].message;
-  let isOk = false;
   if (req.body) {
+    axios.post(process.env.LINE_WEBHOOK_URL, req.body);
     if (
       text.toLowerCase().includes("ok") ||
       text.toLowerCase().includes("ya") ||
@@ -37,18 +37,17 @@ router.post("/webhooks", (req, res) => {
           );
         });
     }
-    axios.post(process.env.LINE_WEBHOOK_URL, req.body);
-  }
-  return res.status(200).send(
-    JSON.stringify(
-      {
-        statusCode: 200,
-        code: "Ok",
-      },
-      null,
-      2
-    )
-  );
+  } else
+    return res.status(200).send(
+      JSON.stringify(
+        {
+          statusCode: 200,
+          code: "Ok",
+        },
+        null,
+        2
+      )
+    );
 });
 
 router.get("/:id", (req, res) => {
