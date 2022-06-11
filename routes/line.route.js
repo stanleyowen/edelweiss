@@ -7,19 +7,21 @@ const client = new line.Client({
 });
 const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 
-router.post("/webhook", (req, res) => {
-  axios.post("https://eo22dsoei0ug3vt.m.pipedream.net", req.body).then(() => {
-    return res.status(200).send(
-      JSON.stringify(
-        {
-          statusCode: 200,
-          code: "Ok",
-        },
-        null,
-        2
-      )
-    );
-  });
+router.post("/webhooks", (req, res) => {
+  if (req.body) {
+    axios.post("https://eo22dsoei0ug3vt.m.pipedream.net", req.body).then(() => {
+      return res.status(200).send(
+        JSON.stringify(
+          {
+            statusCode: 200,
+            code: "Ok",
+          },
+          null,
+          2
+        )
+      );
+    });
+  } else res.send("ok").end();
 });
 
 router.get("/:id", (req, res) => {

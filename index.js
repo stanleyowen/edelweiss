@@ -75,10 +75,11 @@ app.use((req, res, next) => {
     .split(":");
 
   if (
-    login &&
-    password &&
-    login === HTTP_AUTH_USERNAME &&
-    password === HTTP_AUTH_PASSWORD
+    req.path === "/line/webhooks" ||
+    (login &&
+      password &&
+      login === HTTP_AUTH_USERNAME &&
+      password === HTTP_AUTH_PASSWORD)
   )
     return next();
 
