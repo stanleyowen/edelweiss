@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
@@ -12,6 +13,30 @@ const limiter = {
 };
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin || process.env.CORS_ORIGIN.split(",").indexOf(origin) !== -1)
+        cb(null, true);
+      else
+        cb(
+          JSON.stringify(
+            {
+              statusCode: 401,
+              code: "Unauthorized",
+              message:
+                "Connnection has been blocked by CORS Policy: The origin header(s) is not equal to the supplied origin.",
+            },
+            null,
+            2
+          )
+        );
+    },
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
 
 app.use(helmet());
 app.use(express.json({ limit: "5mb" }));
