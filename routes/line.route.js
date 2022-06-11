@@ -9,30 +9,34 @@ const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 
 router.post("/webhooks", (req, res) => {
   const { text } = req.body.events[0].message;
+  let isOk = false;
   if (req.body) {
-    text.split(" ").forEach((word) => {
-      if (word.toLowerCase().includes("ok")) {
-        client
-          .replyMessage(req.body.events[0].replyToken, {
-            type: "sticker",
-            packageId: "8522",
-            stickerId: "16581266",
-          })
-          .then(() => {
-            return res.status(200).send(
-              JSON.stringify(
-                {
-                  statusCode: 200,
-                  code: "Ok",
-                  message: "Reply Message sent successfully.",
-                },
-                null,
-                2
-              )
-            );
-          });
-      }
-    });
+    if (
+      text.toLowerCase().includes("ok") ||
+      text.toLowerCase().includes("ya") ||
+      text.toLowerCase().includes("yea") ||
+      text.toLowerCase().includes("sip")
+    ) {
+      client
+        .replyMessage(req.body.events[0].replyToken, {
+          type: "sticker",
+          packageId: "8522",
+          stickerId: "16581266",
+        })
+        .then(() => {
+          return res.status(200).send(
+            JSON.stringify(
+              {
+                statusCode: 200,
+                code: "Ok",
+                message: "Reply Message sent successfully.",
+              },
+              null,
+              2
+            )
+          );
+        });
+    }
     axios.post(process.env.LINE_WEBHOOK_URL, req.body);
   }
   return res.status(200).send(
