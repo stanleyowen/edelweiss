@@ -11,25 +11,28 @@ router.post("/webhook", (req, res) => {
   console.log("hi");
 });
 
-router.get("/", (req, res) => {
-  client
-    .multicast(clientDestination, {
-      type: "text",
-      text: process.env.TWILIO_MESSAGE.replace(/\\n/g, "\n"),
-    })
-    .then(() => {
-      return res.status(200).send(
-        JSON.stringify(
-          {
-            statusCode: 200,
-            code: "Ok",
-            message: "Message sent successfully.",
-          },
-          null,
-          2
-        )
-      );
-    });
+router.get("/:id", (req, res) => {
+  const message = process.env[req.params.id];
+  if (message) {
+    client
+      .multicast(clientDestination, {
+        type: "text",
+        text: message.replace(/\\n/g, "\n"),
+      })
+      .then(() => {
+        return res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              code: "Ok",
+              message: "Message sent successfully.",
+            },
+            null,
+            2
+          )
+        );
+      });
+  }
 });
 
 module.exports = router;
