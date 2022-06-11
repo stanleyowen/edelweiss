@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const axios = require("axios");
 const line = require("@line/bot-sdk");
+const stickers = require("../lib/sticker.lib.json");
 
 const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -17,11 +18,12 @@ router.post("/webhooks", (req, res) => {
       text.toLowerCase().includes("yea") ||
       text.toLowerCase().includes("sip")
     ) {
+      const stickerIndex = Math.floor(Math.random() * stickers.okay.length);
       client
         .replyMessage(req.body.events[0].replyToken, {
           type: "sticker",
-          packageId: "8522",
-          stickerId: "16581266",
+          packageId: stickers.okay[stickerIndex].packageId,
+          stickerId: stickers.okay[stickerIndex].stickerId,
         })
         .then(() => {
           return res.status(200).send(
