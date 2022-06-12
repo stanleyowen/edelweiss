@@ -9,9 +9,10 @@ const client = new line.Client({
 const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 
 router.post("/webhooks", (req, res) => {
-  const { text } = req.body.events[0].message;
-  if (req.body) {
-    axios.post(process.env.LINE_WEBHOOK_URL, req.body);
+  if (Object.keys(req.body).length > 0) {
+    const { text } = req.body.events[0].message;
+    if (process.env.NODE_ENV === "production")
+      axios.post(process.env.LINE_WEBHOOK_URL, req.body);
     if (
       text.toLowerCase().includes("ok") ||
       text.toLowerCase().includes("ya") ||
