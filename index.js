@@ -74,6 +74,7 @@ app.use((req, res, next) => {
     .split(":");
 
   if (
+    req.path === "/" ||
     req.path === "/line/webhooks" ||
     (login &&
       password &&
