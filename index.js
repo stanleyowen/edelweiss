@@ -1,7 +1,9 @@
 const cors = require("cors");
-const express = require("express");
 const helmet = require("helmet");
+const express = require("express");
 const rateLimit = require("express-rate-limit");
+
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,8 +13,6 @@ const limiter = {
   message:
     "We're sorry, but you have made too many requests to our servers. Please try again later.",
 };
-
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 app.use(
   cors({
@@ -42,7 +42,7 @@ app.use(helmet());
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
-app.use((req, res, next) => {
+app.use((_, res, next) => {
   res.header("Content-Type", "application/json; charset=UTF-8");
   return next();
 });
@@ -68,7 +68,6 @@ app.use(
 
 app.use((req, res, next) => {
   const { HTTP_AUTH_USERNAME, HTTP_AUTH_PASSWORD } = process.env;
-
   const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
   const [login, password] = Buffer.from(b64auth, "base64")
     .toString()
@@ -100,12 +99,12 @@ app.use((req, res, next) => {
     );
 });
 
-const messagesRouter = require("./routes/messages.route");
-const herokuRouter = require("./routes/heroku.route");
 const lineRouter = require("./routes/line.route");
+const herokuRouter = require("./routes/heroku.route");
+const messagesRouter = require("./routes/messages.route");
 app.use("/", messagesRouter);
-app.use("/heroku", herokuRouter);
 app.use("/line", lineRouter);
+app.use("/heroku", herokuRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
