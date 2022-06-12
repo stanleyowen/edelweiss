@@ -99,9 +99,11 @@ app.use((req, res, next) => {
     );
 });
 
+const mainRouter = require("./routes/main.route");
 const lineRouter = require("./routes/line.route");
 const herokuRouter = require("./routes/heroku.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
+app.use("/", mainRouter);
 app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
 app.use("/heroku", herokuRouter);
