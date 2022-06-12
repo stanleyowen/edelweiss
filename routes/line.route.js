@@ -38,7 +38,42 @@ router.post("/webhooks", (req, res) => {
             )
           );
         });
-    }
+    } else if (
+      text.toLowerCase().includes("wk") &&
+      text.toLowerCase().split("w").length - 1 > 1 &&
+      text.toLowerCase().split("k").length - 1 > 1
+    ) {
+      const stickerIndex = Math.floor(Math.random() * stickers.laugh.length);
+      client
+        .replyMessage(req.body.events[0].replyToken, {
+          type: "sticker",
+          packageId: stickers.laugh[stickerIndex].packageId,
+          stickerId: stickers.laugh[stickerIndex].stickerId,
+        })
+        .then(() => {
+          return res.status(200).send(
+            JSON.stringify(
+              {
+                statusCode: 200,
+                code: "Ok",
+                message: "Reply Message sent successfully.",
+              },
+              null,
+              2
+            )
+          );
+        });
+    } else
+      return res.status(200).send(
+        JSON.stringify(
+          {
+            statusCode: 200,
+            code: "Ok",
+          },
+          null,
+          2
+        )
+      );
   } else
     return res.status(200).send(
       JSON.stringify(
