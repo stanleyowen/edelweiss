@@ -101,9 +101,9 @@ app.use((req, res, next) => {
 
 const lineRouter = require("./routes/line.route");
 const herokuRouter = require("./routes/heroku.route");
-const messagesRouter = require("./routes/messages.route");
-app.use("/", messagesRouter);
+const whatsAppRouter = require("./routes/whatsapp.route");
 app.use("/line", lineRouter);
+app.use("/whatsapp", whatsAppRouter);
 app.use("/heroku", herokuRouter);
 
 app.listen(PORT, () => {

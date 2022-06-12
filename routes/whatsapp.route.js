@@ -5,7 +5,7 @@ router.get("/", (req, res) => {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const client = require("twilio")(accountSID, authToken);
 
-  client.messages;
+  // client.messages
   // .create({
   //   to: `whatsapp:${process.env.TWILIO_RECIPIENT_NUMBER}`,
   //   from: `whatsapp:${process.env.TWILIO_PHONE_NUMBER}`,
@@ -38,8 +38,18 @@ router.get("/", (req, res) => {
   //   );
   // })
   // .done();
-
-  res.send("Whatsapp Route is Deprecated for this Moment.");
+  return res.status(410).send(
+    JSON.stringify(
+      {
+        statusCode: 410,
+        code: "Gone",
+        message:
+          "Access to the following resources are no longer availbale for this moment.",
+      },
+      null,
+      2
+    )
+  );
 });
 
 module.exports = router;
