@@ -75,7 +75,7 @@ app.use((req, res, next) => {
 
   if (
     req.path === "/" ||
-    req.path === "/line/webhooks" ||
+    (req.path === "/line/webhooks" && req.method === "POST") ||
     (login &&
       password &&
       login === HTTP_AUTH_USERNAME &&
