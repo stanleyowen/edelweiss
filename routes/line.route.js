@@ -12,7 +12,7 @@ router.post("/webhooks", (req, res) => {
   if (Object.keys(req.body).length > 0) {
     const { text } = req.body.events[0].message;
     if (process.env.NODE_ENV === "production")
-      axios.post(process.env.LINE_WEBHOOK_URL, req.body);
+      axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
     if (
       text.toLowerCase().includes("ok") ||
       text.toLowerCase().includes("ya") ||
