@@ -25,9 +25,15 @@ router.get("/pipedream", (req, res) => {
         },
       }
     )
-    .then((logs) =>
-      res.status(200).send(JSON.stringify(logs.data?.data, null, 2))
-    )
+    .then((logs) => {
+      const data = JSON.stringify(logs.data?.data, null, 2);
+      if (req.query.download) {
+        res.set({
+          "Content-Disposition": "attachment; filename=pipedream.json",
+        });
+        res.status(200).send(data);
+      } else res.status(200).send(data);
+    })
     .catch((err) => res.status(400).send(JSON.stringify(err, null, 2)));
 });
 
