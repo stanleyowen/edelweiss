@@ -11,7 +11,7 @@ const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 router.post("/webhooks", (req, res) => {
   if (Object.keys(req.body).length > 0) {
     const { text } = req.body.events[0].message;
-    if (process.env.NODE_ENV === "production")
+    if (process.env.NODE_ENV !== "development") {
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
     if (
       text.toLowerCase().includes("ok") ||
