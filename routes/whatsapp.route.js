@@ -1,10 +1,10 @@
 const router = require("express").Router();
 
 router.get("/", (req, res) => {
-  const accountSID = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const client = require("twilio")(accountSID, authToken);
-
+  // const accountSID = process.env.TWILIO_ACCOUNT_SID;
+  // const authToken = process.env.TWILIO_AUTH_TOKEN;
+  // const client = require("twilio")(accountSID, authToken);
+  //
   // client.messages
   // .create({
   //   to: `whatsapp:${process.env.TWILIO_RECIPIENT_NUMBER}`,
@@ -38,6 +38,7 @@ router.get("/", (req, res) => {
   //   );
   // })
   // .done();
+
   return res.status(410).send(
     JSON.stringify(
       {

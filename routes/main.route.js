@@ -7,6 +7,7 @@ router.get("/", (_, res) => {
       {
         statusCode: 200,
         code: "Ok",
+        environment: process.env.NODE_ENV,
         message: "Server is up and running",
       },
       null,
