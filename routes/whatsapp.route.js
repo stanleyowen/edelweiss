@@ -39,13 +39,28 @@ router.get("/", (req, res) => {
   // })
   // .done();
 
-  return res.status(410).send(
+  res
+    .status(410)
+    .send(
+      JSON.stringify(
+        {
+          statusCode: 410,
+          code: "Gone",
+          message:
+            "Access to the following resources are no longer availbale for this moment.",
+        },
+        null,
+        2
+      )
+    )
+    .end();
+
+  return res.set(500).send(
     JSON.stringify(
       {
-        statusCode: 410,
-        code: "Gone",
-        message:
-          "Access to the following resources are no longer availbale for this moment.",
+        statusCode: 500,
+        code: "Internal Server Error",
+        message: "Internal Server Error",
       },
       null,
       2

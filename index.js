@@ -1,4 +1,5 @@
 const cors = require("cors");
+const axios = require("axios");
 const helmet = require("helmet");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
@@ -111,4 +112,18 @@ app.use("/heroku", herokuRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
+});
+
+process.on("unhandledRejection", (reason, p) => {
+  console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
+  axios.post(`${process.env.WEBHOOK_URL}/logs`, {
+    statusCode: 500,
+    code: "Internal Server Error",
+    message: "Unhandled Rejection at: Promise",
+    data: {
+      reason,
+      p,
+    },
+  });
+  process.exit(1);
 });
