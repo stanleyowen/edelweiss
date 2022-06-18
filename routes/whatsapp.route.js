@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const fs = require("fs");
 
 router.get("/", (req, res) => {
   // const accountSID = process.env.TWILIO_ACCOUNT_SID;
@@ -39,33 +40,17 @@ router.get("/", (req, res) => {
   // })
   // .done();
 
-  res
-    .status(410)
-    .send(
-      JSON.stringify(
-        {
-          statusCode: 410,
-          code: "Gone",
-          message:
-            "Access to the following resources are no longer availbale for this moment.",
-        },
-        null,
-        2
-      )
-    )
-    .end();
-
-  return res.set(500).send(
-    JSON.stringify(
-      {
-        statusCode: 500,
-        code: "Internal Server Error",
-        message: "Internal Server Error",
-      },
-      null,
-      2
-    )
-  );
+  fs.createReadStream("does-not-exist.txt");
+  // res.status(410).send(
+  //   JSON.stringify(
+  //     {
+  //       statusCode: 410,
+  //       code: "Gone",
+  //     },
+  //     null,
+  //     2
+  //   )
+  // );
 });
 
 module.exports = router;
