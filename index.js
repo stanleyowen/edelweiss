@@ -3,8 +3,12 @@ const helmet = require("helmet");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
-require("./lib/crashReporter");
+if (
+  process.env.NODE_ENV !== "production" &&
+  process.env.NODE_ENV !== "staging"
+) {
+  require("dotenv").config();
+} else require("./lib/crashReporter");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
