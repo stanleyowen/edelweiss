@@ -4,6 +4,7 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
+require("./lib/crashReporter");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
