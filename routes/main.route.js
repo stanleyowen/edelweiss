@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const axios = require("axios");
+const errorReporter = require("../lib/errorReporter");
 
 router.get("/", (_, res) => {
   return res.status(200).send(
@@ -37,9 +38,10 @@ router.get("/pipedream", (req, res) => {
     })
     .catch((err) => {
       errorReporter(err);
-      res.status(400).send(JSON.stringify(err, null, 2));
-    })
-    .catch((err) => res.status(400).send(JSON.stringify(err, null, 2)));
+      res
+        .status(err?.response?.status ?? 400)
+        .send(JSON.stringify(err, null, 2));
+    });
 });
 
 router.delete("/pipedream", (req, res) => {
@@ -63,7 +65,9 @@ router.delete("/pipedream", (req, res) => {
     )
     .catch((err) => {
       errorReporter(err);
-      res.status(400).send(JSON.stringify(err, null, 2));
+      res
+        .status(err?.response?.status ?? 400)
+        .send(JSON.stringify(err, null, 2));
     });
 });
 

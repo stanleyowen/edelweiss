@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Heroku = require("heroku-client");
-const heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
 const errorReporter = require("../lib/errorReporter");
 const heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
 
@@ -10,7 +9,7 @@ router.get("/env-vars/:app_name", (req, res) => {
     .then((env) => res.status(200).send(JSON.stringify(env, null, 2)))
     .catch((err) => {
       errorReporter(err);
-      res.status(400).send(JSON.stringify(err, null, 2));
+      res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
     });
 });
 
@@ -23,7 +22,7 @@ router.patch("/env-vars/:app_name", (req, res) => {
     .then((env) => res.status(200).send(JSON.stringify(env, null, 2)))
     .catch((err) => {
       errorReporter(err);
-      res.status(400).send(JSON.stringify(err, null, 2));
+      res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
     });
 });
 
