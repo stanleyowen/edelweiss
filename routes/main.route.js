@@ -35,6 +35,10 @@ router.get("/pipedream", (req, res) => {
         res.status(200).send(data);
       } else res.status(200).send(data);
     })
+    .catch((err) => {
+      errorReporter(err);
+      res.status(400).send(JSON.stringify(err, null, 2));
+    })
     .catch((err) => res.status(400).send(JSON.stringify(err, null, 2)));
 });
 
@@ -57,7 +61,10 @@ router.delete("/pipedream", (req, res) => {
         )
       )
     )
-    .catch((err) => res.status(400).send(JSON.stringify(err, null, 2)));
+    .catch((err) => {
+      errorReporter(err);
+      res.status(400).send(JSON.stringify(err, null, 2));
+    });
 });
 
 module.exports = router;
