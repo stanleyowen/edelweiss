@@ -2,6 +2,7 @@ const router = require("express").Router();
 const axios = require("axios");
 const line = require("@line/bot-sdk");
 const stickers = require("../lib/sticker.lib.json");
+const errorReporter = require("../lib/errorReporter");
 
 const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -31,13 +32,17 @@ router.post("/webhooks", (req, res) => {
             JSON.stringify(
               {
                 statusCode: 200,
-                code: "Ok",
+                statusMessage: "Ok",
                 message: "Reply Message sent successfully.",
               },
               null,
               2
             )
           );
+        })
+        .catch((err) => {
+          errorReporter(err);
+          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
         });
     } else if (
       text.toLowerCase().includes("wk") &&
@@ -56,20 +61,24 @@ router.post("/webhooks", (req, res) => {
             JSON.stringify(
               {
                 statusCode: 200,
-                code: "Ok",
+                statusMessage: "Ok",
                 message: "Reply Message sent successfully.",
               },
               null,
               2
             )
           );
+        })
+        .catch((err) => {
+          errorReporter(err);
+          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
         });
     } else
       return res.status(200).send(
         JSON.stringify(
           {
             statusCode: 200,
-            code: "Ok",
+            statusMessage: "Ok",
           },
           null,
           2
@@ -80,7 +89,7 @@ router.post("/webhooks", (req, res) => {
       JSON.stringify(
         {
           statusCode: 200,
-          code: "Ok",
+          statusMessage: "Ok",
         },
         null,
         2
@@ -97,11 +106,11 @@ router.get("/:id", (req, res) => {
           text: message.replace(/\\n/g, "\n"),
         })
         .then(() => {
-          return res.status(200).send(
+          res.status(200).send(
             JSON.stringify(
               {
                 statusCode: 200,
-                code: "Ok",
+                statusMessage: "Ok",
                 message: "Message sent successfully.",
               },
               null,
@@ -109,11 +118,15 @@ router.get("/:id", (req, res) => {
             )
           );
         })
+        .catch((err) => {
+          errorReporter(err);
+          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+        })
     : res.status(404).send(
         JSON.stringify(
           {
             statusCode: 404,
-            code: "Not Found",
+            statusMessage: "Not Found",
           },
           null,
           2

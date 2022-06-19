@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Heroku = require("heroku-client");
 const heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
 const errorReporter = require("../lib/errorReporter");
+const heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
 
 router.get("/env-vars/:app_name", (req, res) => {
   heroku
