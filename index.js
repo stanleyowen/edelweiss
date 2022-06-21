@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const limiter = {
   statusCode: 429,
-  code: "Too Many Requests",
+  statusMessage: "Too Many Requests",
   message:
     "We're sorry, but you have made too many requests to our servers. Please try again later.",
 };
@@ -29,7 +29,7 @@ app.use(
           JSON.stringify(
             {
               statusCode: 401,
-              code: "Unauthorized",
+              statusMessage: "Unauthorized",
               message:
                 "Connnection has been blocked by CORS Policy: The origin header(s) is not equal to the supplied origin.",
             },
@@ -95,7 +95,7 @@ app.use((req, res, next) => {
       JSON.stringify(
         {
           statusCode: 401,
-          code: "Unauthorized",
+          statusMessage: "Unauthorized",
           message:
             "The pages you are trying to access requires authentication. Please try again.",
         },

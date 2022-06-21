@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
   //     JSON.stringify(
   //       {
   //         statusCode: 200,
-  //         code: "Ok",
+  //         statusMessage: "Ok",
   //         message: "Message sent successfully.",
   //       },
   //       null,
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
   //     JSON.stringify(
   //       {
   //         statusCode: 500,
-  //         code: "Internal Server Error",
+  //         statusMessage: "Internal Server Error",
   //         message: err.message,
   //       },
   //       null,
@@ -43,7 +43,7 @@ router.get("/", (req, res) => {
     JSON.stringify(
       {
         statusCode: 410,
-        code: "Gone",
+        statusMessage: "Gone",
         message:
           "Access to the following resources are no longer availbale for this moment.",
       },

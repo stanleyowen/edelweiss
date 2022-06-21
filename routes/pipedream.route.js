@@ -41,7 +41,7 @@ router.delete("/", (_, res) => {
         JSON.stringify(
           {
             statusCode: 200,
-            code: "Ok",
+            statusMessage: "Ok",
           },
           null,
           2
