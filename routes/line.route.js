@@ -18,7 +18,8 @@ router.post("/webhooks", (req, res) => {
       text.toLowerCase().includes("ok") ||
       text.toLowerCase().includes("ya") ||
       text.toLowerCase().includes("yea") ||
-      text.toLowerCase().includes("sip")
+      text.toLowerCase().includes("sip") ||
+      text.toLowerCase().includes("yup")
     ) {
       const stickerIndex = Math.floor(Math.random() * stickers.okay.length);
       client
