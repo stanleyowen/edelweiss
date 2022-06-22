@@ -95,12 +95,48 @@
             "stickerId": "11088037"
         },
         {
+            "packageId": "6370",
+            "stickerId": "11088038"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002745"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002748"
+        },
+        {
+            "packageId": "11538",
+            "stickerId": "51626503"
+        },
+        {
+            "packageId": "11538",
+            "stickerId": "51626505"
+        },
+        {
             "packageId": "11538",
             "stickerId": "51626507"
         },
         {
             "packageId": "11538",
             "stickerId": "51626519"
+        },
+        {
+            "packageId": "11538",
+            "stickerId": "51626527"
+        },
+        {
+            "packageId": "11539",
+            "stickerId": "52114116"
+        },
+        {
+            "packageId": "11539",
+            "stickerId": "52114125"
+        },
+        {
+            "packageId": "11539",
+            "stickerId": "52114131"
         }
     ]
 }
