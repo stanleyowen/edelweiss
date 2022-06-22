@@ -20,12 +20,11 @@ router.post("/webhooks", (req, res) => {
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
     if (
-      text.toLowerCase().includes("ok") ||
       text.toLowerCase().includes("ya") ||
-      text.toLowerCase().includes("yea") ||
       text.toLowerCase().includes("sip") ||
       text.toLowerCase().includes("yup") ||
-      text.toLowerCase().includes("yep")
+      (text.toLowerCase().includes("ok") && text.length < 6) || // ok, okay, okei, woke, okew, wokei
+      (text.toLowerCase().includes("ye") && text.length < 5) // ye, yep, yes, yeah
     ) {
       const stickerIndex = Math.floor(Math.random() * stickers.okay.length);
 
