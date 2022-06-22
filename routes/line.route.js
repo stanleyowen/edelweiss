@@ -45,11 +45,7 @@ router.post("/webhooks", (req, res) => {
           errorReporter(err);
           res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
         });
-    } else if (
-      text.toLowerCase().includes("wk") &&
-      text.toLowerCase().split("w").length - 1 > 1 &&
-      text.toLowerCase().split("k").length - 1 > 1
-    ) {
+    } else if (validateKeywords("laugh", text)) {
       const stickerIndex = Math.floor(Math.random() * stickers.laugh.length);
       client
         .replyMessage(req.body.events[0].replyToken, {
