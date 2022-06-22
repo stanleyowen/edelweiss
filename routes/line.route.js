@@ -3,7 +3,7 @@ const axios = require("axios");
 const line = require("@line/bot-sdk");
 const stickers = require("../lib/sticker.lib.json");
 const errorReporter = require("../lib/errorReporter");
-const removeDuplicates = require("../lib/string");
+const { validateKeywords, removeDuplicates } = require("../lib/string");
 
 const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -19,13 +19,7 @@ router.post("/webhooks", (req, res) => {
     if (process.env.NODE_ENV !== "development")
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
-    if (
-      text.toLowerCase().includes("ya") ||
-      text.toLowerCase().includes("sip") ||
-      text.toLowerCase().includes("yup") ||
-      (text.toLowerCase().includes("ok") && text.length < 6) || // ok, okay, okei, woke, okew, wokei
-      (text.toLowerCase().includes("ye") && text.length < 5) // ye, yep, yes, yeah
-    ) {
+    if (validateKeywords("okay", text)) {
       const stickerIndex = Math.floor(Math.random() * stickers.okay.length);
 
       client
