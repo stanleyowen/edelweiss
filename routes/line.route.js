@@ -35,40 +35,15 @@ router.post("/webhooks", (req, res) => {
     if (process.env.NODE_ENV !== "development")
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
-    if (validateKeywords("okay", text)) {
-      replayMessageReaction("okay", req.body)
-        .then((data) =>
-          res.status(data.statusCode).send(JSON.stringify(data, null, 2))
-        )
-        .catch((err) =>
-          res.status(err.statusCode).send(JSON.stringify(err, null, 2))
-        );
-    } else if (validateKeywords("laugh", text)) {
-      const stickerIndex = Math.floor(Math.random() * stickers.laugh.length);
-      client
-        .replyMessage(req.body.events[0].replyToken, {
-          type: "sticker",
-          packageId: stickers.laugh[stickerIndex].packageId,
-          stickerId: stickers.laugh[stickerIndex].stickerId,
-        })
-        .then(() => {
-          return res.status(200).send(
-            JSON.stringify(
-              {
-                statusCode: 200,
-                statusMessage: "Ok",
-                message: "Reply Message sent successfully.",
-              },
-              null,
-              2
-            )
-          );
-        })
-        .catch((err) => {
-          errorReporter(err);
-          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-        });
-    } else
+    if (validateKeywords("okay", text))
+      replayMessageReaction("okay", req.body, (cb) => {
+        res.status(cb.statusCode).send(JSON.stringify(cb, null, 2));
+      });
+    else if (validateKeywords("laugh", text))
+      replayMessageReaction("okay", req.body, (cb) => {
+        res.status(cb.statusCode).send(JSON.stringify(cb, null, 2));
+      });
+    else
       return res.status(200).send(
         JSON.stringify(
           {
