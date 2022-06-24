@@ -40,7 +40,7 @@ router.post("/webhooks", (req, res) => {
         res.status(cb.statusCode).send(JSON.stringify(cb, null, 2));
       });
     else if (validateKeywords("laugh", text))
-      replayMessageReaction("okay", req.body, (cb) => {
+      replayMessageReaction("laugh", req.body, (cb) => {
         res.status(cb.statusCode).send(JSON.stringify(cb, null, 2));
       });
     else
