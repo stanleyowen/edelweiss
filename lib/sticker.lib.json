@@ -162,5 +162,47 @@
             "packageId": "11539",
             "stickerId": "52114125"
         }
+    ],
+    "greetings": [
+        {
+            "packageId": "6362",
+            "stickerId": "11087925"
+        },
+        {
+            "packageId": "6370",
+            "stickerId": "11088021"
+        },
+        {
+            "packageId": "6370",
+            "stickerId": "11088028"
+        },
+        {
+            "packageId": "8515",
+            "stickerId": "11088035"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002738"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002741"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002745"
+        },
+        {
+            "packageId": "11537",
+            "stickerId": "52002768"
+        },
+        {
+            "packageId": "11538",
+            "stickerId": "51626494"
+        },
+        {
+            "packageId": "11538",
+            "stickerId": "51626527"
+        }
     ]
 }
