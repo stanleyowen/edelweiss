@@ -31,40 +31,79 @@ router.post("/webhooks", (req, res) => {
   // Check if request body object is not null
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
-    // Split words into an array including punctuation
+    // Split words into an array
     const text = removeDuplicates(req.body.events[0].message.text).split(" ");
-    let idx = 0;
+    let idx = 0,
+      isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
-    while (
-      idx <= text.length &&
-      (validateKeywords("okay", text[idx]) ||
-        validateKeywords("laugh", text[idx]))
-    ) {
-      console.log(idx, text);
+    // Loop each word while the index is less than the length of the text and isContinue is true
+    while (isContinue && idx < text.length) {
+      // Stop the loop if the word is included in the keywords
+      if (
+        validateKeywords("okay", text[idx]) ||
+        validateKeywords("laugh", text[idx])
+      )
+        isContinue = false;
+
       if (validateKeywords("okay", text[idx]))
         replayMessageReaction("okay", req.body, (cb) =>
-          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2)).end()
+          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
         );
       else if (validateKeywords("laugh", text[idx]))
         replayMessageReaction("laugh", req.body, (cb) =>
-          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2)).end()
+          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
         );
-      else if (idx === text.length)
-        res.status(200).send(
-          JSON.stringify(
-            {
-              statusCode: 200,
-              statusMessage: "Ok",
-            },
-            null,
-            2
-          )
-        );
+
       idx++;
     }
+
+    // If the index is greater than the length of the text and isContinue is still true,
+    // returns no category message
+    if (isContinue)
+      res.status(200).send(
+        JSON.stringify(
+          {
+            statusCode: 200,
+            statusMessage: "Ok",
+          },
+          null,
+          2
+        )
+      );
+
+    // } else if (
+    //   text.toLowerCase().includes("thanks") ||
+    //   (text.toLowerCase().split("t").length - 1 > 1 &&
+    //     text.toLowerCase().split("k").length - 1 > 1)
+    // ) {
+    //   const stickerIndex = Math.floor(Math.random() * stickers.laugh.length);
+    //   client
+    //     .replyMessage(req.body.events[0].replyToken, {
+    //       type: "sticker",
+    //       packageId: stickers.laugh[stickerIndex].packageId,
+    //       stickerId: stickers.laugh[stickerIndex].stickerId,
+    //     })
+    //     .then(() => {
+    //       return res.status(200).send(
+    //         JSON.stringify(
+    //           {
+    //             statusCode: 200,
+    //             statusMessage: "Ok",
+    //             message: "Reply Message sent successfully.",
+    //           },
+    //           null,
+    //           2
+    //         )
+    //       );
+    //     })
+    //     .catch((err) => {
+    //       errorReporter(err);
+    //       res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+    //     });
+  } else
     return res.status(200).send(
       JSON.stringify(
         {
