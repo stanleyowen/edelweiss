@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const axios = require("axios");
 const line = require("@line/bot-sdk");
-const stickers = require("../lib/sticker.lib.json");
 const errorReporter = require("../lib/errorReporter");
 const {
   validateKeywords,
@@ -39,115 +38,67 @@ router.post("/webhooks", (req, res) => {
     if (process.env.NODE_ENV !== "development")
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
-    // Loop each word while the index is less than the length of the text and isContinue is true
-    while (isContinue && idx < text.length) {
-      // Stop the loop if the word is included in the keywords
-      if (
-        validateKeywords("okay", text[idx]) ||
-        validateKeywords("laugh", text[idx])
-      )
-        isContinue = false;
-
-      if (validateKeywords("okay", text[idx]))
-        replayMessageReaction("okay", req.body, (cb) =>
-          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
-        );
-      else if (validateKeywords("laugh", text[idx]))
-        replayMessageReaction("laugh", req.body, (cb) =>
-          res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
-        );
-
-      idx++;
-    }
-
-    // If the index is greater than the length of the text and isContinue is still true,
-    // returns no category message
-    if (isContinue)
+    // Check whether its a bot command
+    // A bot command is a word that starts with '/'
+    if (text[0].includes("/") && text[0].indexOf("/") === 0) {
       res.status(200).send(
         JSON.stringify(
           {
             statusCode: 200,
-            statusMessage: "Ok",
+            statusMessage: "COMMND",
           },
           null,
           2
         )
       );
+    } else {
+      // Loop each word while the index is less than the length of the text and isContinue is true
+      while (isContinue && idx < text.length) {
+        // Stop the loop if the word is included in the keywords
+        if (
+          validateKeywords("okay", text[idx]) ||
+          validateKeywords("laugh", text[idx])
+        )
+          isContinue = false;
 
-    // } else if (
-    //   text.toLowerCase().includes("thanks") ||
-    //   (text.toLowerCase().split("t").length - 1 > 1 &&
-    //     text.toLowerCase().split("k").length - 1 > 1)
-    // ) {
-    //   const stickerIndex = Math.floor(Math.random() * stickers.laugh.length);
-    //   client
-    //     .replyMessage(req.body.events[0].replyToken, {
-    //       type: "sticker",
-    //       packageId: stickers.laugh[stickerIndex].packageId,
-    //       stickerId: stickers.laugh[stickerIndex].stickerId,
-    //     })
-    //     .then(() => {
-    //       return res.status(200).send(
-    //         JSON.stringify(
-    //           {
-    //             statusCode: 200,
-    //             statusMessage: "Ok",
-    //             message: "Reply Message sent successfully.",
-    //           },
-    //           null,
-    //           2
-    //         )
-    //       );
-    //     })
-    //     .catch((err) => {
-    //       errorReporter(err);
-    //       res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-    //     });
-  } else
-    return res.status(200).send(
-      JSON.stringify(
-        {
-          statusCode: 200,
-          statusMessage: "Ok",
-        },
-        null,
-        2
-      )
-    );
-});
+        if (validateKeywords("okay", text[idx]))
+          replayMessageReaction("okay", req.body, (cb) =>
+            res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
+          );
+        else if (validateKeywords("laugh", text[idx]))
+          replayMessageReaction("laugh", req.body, (cb) =>
+            res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
+          );
 
-router.post("/webhookss", (req, res) => {
-  const text = removeDuplicates(req.body.events[0].message.text);
-  // stickers.okay.forEach((sticker) => {
-  //   client
-  //     .multicast(clientDestination, {
-  //       type: "sticker",
-  //       packageId: sticker.packageId,
-  //       stickerId: sticker.stickerId,
-  //     })
-  //     .then(() => console.log("done"))
-  //     .catch((err) => {
-  //       // errorReporter(err);
-  //       res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-  //     });
-  // });
-  // replayMessageReaction(validateKeywords("okay", text), req.body, (cb) => {
-  //   res.status(cb.statusCode).send(JSON.stringify(cb, null, 2));
-  console.log(validateKeywords("laugh", text));
-  // });
-  // } else
-  //   return res.status(200).send(
-  //     JSON.stringify(
-  //       {
-  //         statusCode: 200,
-  //         statusMessage: "Ok",
-  //         isOkay: validateKeywords("okay", text),
-  //         isLaught: validateKeywords("laugh", text),
-  //       },
-  //       null,
-  //       2
-  //     )
-  //   );
+        idx++;
+      }
+
+      // If the index is greater than the length of the text and isContinue is still true,
+      // returns no category message
+      if (isContinue)
+        res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              statusMessage: "Ok",
+            },
+            null,
+            2
+          )
+        );
+      else
+        res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              statusMessage: "Ok",
+            },
+            null,
+            2
+          )
+        );
+    }
+  }
 });
 
 router.get("/:id", (req, res) => {
