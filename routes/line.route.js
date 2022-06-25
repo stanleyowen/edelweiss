@@ -39,10 +39,11 @@ router.post("/webhooks", (req, res) => {
       axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
 
     while (
+      idx <= text.length &&
       (validateKeywords("okay", text[idx]) ||
-        validateKeywords("laugh", text[idx])) &&
-      idx < text.length
+        validateKeywords("laugh", text[idx]))
     ) {
+      console.log(idx, text);
       if (validateKeywords("okay", text[idx]))
         replayMessageReaction("okay", req.body, (cb) =>
           res.status(cb.statusCode).send(JSON.stringify(cb, null, 2)).end()
@@ -50,6 +51,17 @@ router.post("/webhooks", (req, res) => {
       else if (validateKeywords("laugh", text[idx]))
         replayMessageReaction("laugh", req.body, (cb) =>
           res.status(cb.statusCode).send(JSON.stringify(cb, null, 2)).end()
+        );
+      else if (idx === text.length)
+        res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              statusMessage: "Ok",
+            },
+            null,
+            2
+          )
         );
       idx++;
     }
