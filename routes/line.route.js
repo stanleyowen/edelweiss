@@ -5,6 +5,7 @@ const errorReporter = require("../lib/errorReporter");
 const {
   validateKeywords,
   replayMessageReaction,
+  validateBotCommands,
 } = require("../lib/lineOperation");
 
 const client = new line.Client({
@@ -41,16 +42,9 @@ router.post("/webhooks", (req, res) => {
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
     if (text[0].includes("/") && text[0].indexOf("/") === 0) {
-      res.status(200).send(
-        JSON.stringify(
-          {
-            statusCode: 200,
-            statusMessage: "COMMND",
-          },
-          null,
-          2
-        )
-      );
+      validateBotCommands(text[0], req.body.events[0].replyToken, (cb) => {
+        res.status(cb.statusCode).send(cb);
+      });
     } else {
       // Loop each word while the index is less than the length of the text and isContinue is true
       while (isContinue && idx < text.length) {
