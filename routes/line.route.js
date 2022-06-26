@@ -97,39 +97,44 @@ router.post("/webhooks", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const message = process.env[req.params.id];
-  message
-    ? client
-        .multicast(clientDestination, {
-          type: "text",
-          text: message.replace(/\\n/g, "\n"),
-        })
-        .then(() => {
-          res.status(200).send(
-            JSON.stringify(
-              {
-                statusCode: 200,
-                statusMessage: "Ok",
-                message: "Message sent successfully.",
-              },
-              null,
-              2
-            )
-          );
-        })
-        .catch((err) => {
-          errorReporter(err);
-          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-        })
-    : res.status(404).send(
-        JSON.stringify(
-          {
-            statusCode: 404,
-            statusMessage: "Not Found",
-          },
-          null,
-          2
-        )
-      );
+  if (
+    message &&
+    (!process.env[`${req.params.id}_CF_MESSAGE_1`] ||
+      !process.env[`${req.params.id}_CF_MESSAGE_2`])
+  )
+    client
+      .multicast(clientDestination, {
+        type: "text",
+        text: message.replace(/\\n/g, "\n"),
+      })
+      .then(() => {
+        res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              statusMessage: "Ok",
+              message: "Message sent successfully.",
+            },
+            null,
+            2
+          )
+        );
+      })
+      .catch((err) => {
+        errorReporter(err);
+        res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+      });
+  else
+    res.status(404).send(
+      JSON.stringify(
+        {
+          statusCode: 200,
+          statusMessage: "Ok",
+        },
+        null,
+        2
+      )
+    );
 });
 
 module.exports = router;
