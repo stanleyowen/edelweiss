@@ -99,8 +99,8 @@ router.get("/:id", (req, res) => {
   const message = process.env[req.params.id];
   if (
     message &&
-    (!process.env[`${req.params.id}_CF_MESSAGE_1`] ||
-      !process.env[`${req.params.id}_CF_MESSAGE_2`])
+    (!process.env[`${req.params.id}_CF_1`] ||
+      !process.env[`${req.params.id}_CF_2`])
   )
     client
       .multicast(clientDestination, {
