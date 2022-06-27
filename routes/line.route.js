@@ -4,8 +4,8 @@ const line = require("@line/bot-sdk");
 const errorReporter = require("../lib/errorReporter");
 const {
   validateKeywords,
-  replayMessageReaction,
   validateBotCommands,
+  replayMessageReaction,
 } = require("../lib/lineOperation");
 
 const client = new line.Client({
