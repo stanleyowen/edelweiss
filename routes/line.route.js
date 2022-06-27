@@ -128,7 +128,7 @@ router.get("/:id", (req, res) => {
         res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
       });
   else
-    res.status(404).send(
+    res.status(200).send(
       JSON.stringify(
         {
           statusCode: 200,
