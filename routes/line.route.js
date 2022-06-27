@@ -96,6 +96,8 @@ router.post("/webhooks", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
+  const message = process.env[req.params.id];
+
   if (
     message &&
     (!process.env[`${req.params.id}_CF_1`] ||
