@@ -1,10 +1,10 @@
 const router = require("express").Router();
 
 router.get("/", (req, res) => {
-  const accountSID = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const client = require("twilio")(accountSID, authToken);
-
+  // const accountSID = process.env.TWILIO_ACCOUNT_SID;
+  // const authToken = process.env.TWILIO_AUTH_TOKEN;
+  // const client = require("twilio")(accountSID, authToken);
+  //
   // client.messages
   // .create({
   //   to: `whatsapp:${process.env.TWILIO_RECIPIENT_NUMBER}`,
@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
   //     JSON.stringify(
   //       {
   //         statusCode: 200,
-  //         code: "Ok",
+  //         statusMessage: "Ok",
   //         message: "Message sent successfully.",
   //       },
   //       null,
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
   //     JSON.stringify(
   //       {
   //         statusCode: 500,
-  //         code: "Internal Server Error",
+  //         statusMessage: "Internal Server Error",
   //         message: err.message,
   //       },
   //       null,
@@ -38,11 +38,12 @@ router.get("/", (req, res) => {
   //   );
   // })
   // .done();
+
   return res.status(410).send(
     JSON.stringify(
       {
         statusCode: 410,
-        code: "Gone",
+        statusMessage: "Gone",
         message:
           "Access to the following resources are no longer availbale for this moment.",
       },
