@@ -18,7 +18,9 @@ const client = new IgApiClient();
     );
   })
     .catch(IgCheckpointError, async () => {
+      console.log(ig.state.checkpoint); // Checkpoint info here
       await client.challenge.auto(true); // Requesting sms-code or click "It was me" button
+      console.log(ig.state.checkpoint); // Challenge info here
       const { code } = await inquirer.prompt([
         {
           type: "input",
@@ -26,7 +28,11 @@ const client = new IgApiClient();
           message: "Enter code",
         },
       ]);
-      console.log(await client.challenge.sendSecurityCode(code));
+      await client.challenge.sendSecurityCode(code);
+      await client.account.login(
+        process.env.IG_USERNAME,
+        process.env.IG_PASSWORD
+      );
     })
     .catch((e) => console.log("Could not resolve checkpoint:", e, e.stack));
 })();
