@@ -109,10 +109,12 @@ const mainRouter = require("./routes/main.route");
 const lineRouter = require("./routes/line.route");
 const herokuRouter = require("./routes/heroku.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
+const instagramRouter = require("./routes/instagram.route");
 const pipedreamRouter = require("./routes/pipedream.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
+app.use("/instagram", instagramRouter);
 app.use("/heroku", herokuRouter);
 app.use("/pipedream", pipedreamRouter);
 

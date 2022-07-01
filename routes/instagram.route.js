@@ -5,8 +5,12 @@ const { IgApiClient, IgCheckpointError } = require("instagram-private-api");
 const errorReporter = require("../lib/errorReporter");
 
 const client = new IgApiClient();
+
 (async () => {
+  // Generate device id's before login
   await client.state.generateDevice(process.env.IG_USERNAME);
+
+  // Login to Instagram
   Bluebird.try(async () => {
     await client.account.login(
       process.env.IG_USERNAME,
@@ -28,7 +32,9 @@ const client = new IgApiClient();
 })();
 
 router.get("/", async (req, res) => {
-  const userId = await client.user.getIdByUsername(process.env.IG_USERNAME);
+  const userId = await client.user.getIdByUsername(
+    process.env.IG_USERNAME_DESTINATION
+  );
   const thread = await client.entity.directThread([userId.toString()]);
   await thread
     .broadcastText("Hello world!")
