@@ -29,6 +29,7 @@ const client = new IgApiClient();
           message: "Enter code",
         },
       ]);
+
       await client.challenge.sendSecurityCode(code);
       await client.account.login(
         process.env.IG_USERNAME,
