@@ -6,6 +6,7 @@ const errorReporter = require("../lib/errorReporter");
 
 const client = new IgApiClient();
 
+// Login function
 (async () => {
   // Generate device id's before login
   await client.state.generateDevice(process.env.IG_USERNAME);
@@ -37,13 +38,17 @@ const client = new IgApiClient();
     .catch((e) => console.log("Could not resolve checkpoint:", e, e.stack));
 })();
 
-router.get("/", async (req, res) => {
+// Send message to destination user with id params
+router.get("/:id", async (req, res) => {
+  // Check if the params object in env is not null
+  const message = process.env[req.params.id];
   const userId = await client.user.getIdByUsername(
     process.env.IG_USERNAME_DESTINATION
   );
   const thread = await client.entity.directThread([userId.toString()]);
+
   await thread
-    .broadcastText("Hello world!")
+    .broadcastText(message.replace(/\\n/g, "\n"))
     .then(() =>
       res.status(200).send(
         JSON.stringify(

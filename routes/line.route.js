@@ -84,9 +84,12 @@ router.post("/webhooks", (req, res) => {
   }
 });
 
+// Send message to destination user with id params
 router.get("/:id", (req, res) => {
+  // Check if the params object in env is not null
   const message = process.env[req.params.id];
 
+  // Check if the messages have been confirmed
   if (
     message &&
     (!process.env[`${req.params.id}_CF_1`] ||
