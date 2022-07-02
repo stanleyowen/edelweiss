@@ -47,25 +47,44 @@ router.get("/:id", async (req, res) => {
   );
   const thread = await client.entity.directThread([userId.toString()]);
 
-  await thread
-    .broadcastText(message.replace(/\\n/g, "\n"))
-    .then(() =>
-      res.status(200).send(
-        JSON.stringify(
-          {
-            statusCode: 200,
-            statusMessage: "Ok",
-            message: "Message sent successfully.",
-          },
-          null,
-          2
+  // Check if the messages have been confirmed
+  if (
+    message &&
+    (!process.env[`${req.params.id}_CF_1`] ||
+      !process.env[`${req.params.id}_CF_2`] ||
+      process.env[`${req.params.id}_CF_1`] === "false" ||
+      process.env[`${req.params.id}_CF_2`] === "false")
+  )
+    await thread
+      .broadcastText(message.replace(/\\n/g, "\n"))
+      .then(() =>
+        res.status(200).send(
+          JSON.stringify(
+            {
+              statusCode: 200,
+              statusMessage: "Ok",
+              message: "Message sent successfully.",
+            },
+            null,
+            2
+          )
         )
       )
-    )
-    .catch((err) => {
-      errorReporter(err);
-      res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-    });
+      .catch((err) => {
+        errorReporter(err);
+        res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+      });
+  else
+    res.status(200).send(
+      JSON.stringify(
+        {
+          statusCode: 200,
+          statusMessage: "Ok",
+        },
+        null,
+        2
+      )
+    );
 });
 
 module.exports = router;
