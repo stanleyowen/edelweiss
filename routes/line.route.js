@@ -41,11 +41,11 @@ router.post("/webhooks", (req, res) => {
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
-    if (text[0].includes("/") && text[0].indexOf("/") === 0) {
-      validateBotCommands(text[0], req.body.events[0].replyToken, (cb) => {
-        res.status(cb.statusCode).send(cb);
-      });
-    } else {
+    if (text[0].includes("/") && text[0].indexOf("/") === 0)
+      validateBotCommands(text[0], req.body.events[0].replyToken, (cb) =>
+        res.status(cb.statusCode).send(cb)
+      );
+    else {
       // Loop each word while the index is less than the length of the text and isContinue is true
       while (isContinue && idx < text.length) {
         // Stop the loop if the word is included in the keywords
@@ -80,24 +80,16 @@ router.post("/webhooks", (req, res) => {
             2
           )
         );
-      else
-        res.status(200).send(
-          JSON.stringify(
-            {
-              statusCode: 200,
-              statusMessage: "Ok",
-            },
-            null,
-            2
-          )
-        );
     }
   }
 });
 
+// Send message to destination user with id params
 router.get("/:id", (req, res) => {
+  // Check if the params object in env is not null
   const message = process.env[req.params.id];
 
+  // Check if the messages have been confirmed
   if (
     message &&
     (!process.env[`${req.params.id}_CF_1`] ||
@@ -110,7 +102,7 @@ router.get("/:id", (req, res) => {
         type: "text",
         text: message.replace(/\\n/g, "\n"),
       })
-      .then(() => {
+      .then(() =>
         res.status(200).send(
           JSON.stringify(
             {
@@ -121,14 +113,14 @@ router.get("/:id", (req, res) => {
             null,
             2
           )
-        );
-      })
+        )
+      )
       .catch((err) => {
         errorReporter(err);
         res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
       });
   else
-    res.status(404).send(
+    res.status(200).send(
       JSON.stringify(
         {
           statusCode: 200,

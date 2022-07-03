@@ -2,6 +2,7 @@ const router = require("express").Router();
 const axios = require("axios");
 const errorReporter = require("../lib/errorReporter");
 
+// Retrives pipedream logs
 router.get("/", (req, res) => {
   axios
     .get(
@@ -14,7 +15,10 @@ router.get("/", (req, res) => {
     )
     .then((logs) => {
       const data = JSON.stringify(logs.data?.data, null, 2);
+
       if (req.query.download) {
+        // Set headers to attachment
+        // The following headers will allow the browser to download the file
         res.set({
           "Content-Disposition": "attachment; filename=pipedream.json",
         });
@@ -29,6 +33,7 @@ router.get("/", (req, res) => {
     });
 });
 
+// Delete all pipedream logs
 router.delete("/", (_, res) => {
   axios
     .delete("https://api.pipedream.com/v1/sources/dc_zqu8VnW/events", {
