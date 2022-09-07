@@ -204,5 +204,47 @@
             "packageId": "11538",
             "stickerId": "51626527"
         }
+    ],
+    "goodbye": [
+        {
+            "packageId": "789",
+            "stickerId": "10855"
+        },
+        {
+            "packageId": "789",
+            "stickerId": "10862"
+        },
+        {
+            "packageId": "789",
+            "stickerId": "10875"
+        },
+        {
+            "packageId": "6359",
+            "stickerId": "11069851"
+        },
+        {
+            "packageId": "6359",
+            "stickerId": "11069871"
+        },
+        {
+            "packageId": "6362",
+            "stickerId": "11087923"
+        },
+        {
+            "packageId": "6362",
+            "stickerId": "11087930"
+        },
+        {
+            "packageId": "6362",
+            "stickerId": "11087943"
+        },
+        {
+            "packageId": "11539",
+            "stickerId": "52114121"
+        },
+        {
+            "packageId": "11539",
+            "stickerId": "52114128"
+        }
     ]
 }
