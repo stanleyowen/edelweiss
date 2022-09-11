@@ -5,6 +5,8 @@ const { IgApiClient, IgCheckpointError } = require("instagram-private-api");
 const errorReporter = require("../lib/errorReporter");
 
 const client = new IgApiClient();
+let loginState = false;
+let loginError = false;
 
 // Login function
 (async () => {
@@ -13,10 +15,9 @@ const client = new IgApiClient();
 
   // Login to Instagram
   Bluebird.try(async () => {
-    await client.account.login(
-      process.env.IG_USERNAME,
-      process.env.IG_PASSWORD
-    );
+    await client.account
+      .login(process.env.IG_USERNAME, process.env.IG_PASSWORD)
+      .then(() => (loginState = true)); // Set login state to true
   })
     .catch(IgCheckpointError, async () => {
       console.log(ig.state.checkpoint); // Checkpoint info here
@@ -31,61 +32,88 @@ const client = new IgApiClient();
       ]);
 
       await client.challenge.sendSecurityCode(code);
-      await client.account.login(
-        process.env.IG_USERNAME,
-        process.env.IG_PASSWORD
-      );
+      await client.account
+        .login(process.env.IG_USERNAME, process.env.IG_PASSWORD)
+        .then(() => (loginState = true)) // Set login state to true
+        .catch((err) => {
+          loginError = true;
+          errorReporter(err);
+        });
     })
     .catch((e) => console.log("Could not resolve checkpoint:", e, e.stack));
 })();
 
 // Send message to destination user with id params
 router.get("/:id", async (req, res) => {
-  // Check if the params object in env is not null
-  const message = process.env[req.params.id];
-  const userId = await client.user.getIdByUsername(
-    process.env.IG_USERNAME_DESTINATION
-  );
-  const thread = await client.entity.directThread([userId.toString()]);
-
-  // Check if the messages have been confirmed
-  if (
-    message &&
-    (!process.env[`${req.params.id}_CF_1`] ||
-      !process.env[`${req.params.id}_CF_2`] ||
-      process.env[`${req.params.id}_CF_1`] === "false" ||
-      process.env[`${req.params.id}_CF_2`] === "false")
-  )
-    await thread
-      .broadcastText(message.replace(/\\n/g, "\n"))
-      .then(() =>
-        res.status(200).send(
-          JSON.stringify(
-            {
-              statusCode: 200,
-              statusMessage: "Ok",
-              message: "Message sent successfully.",
-            },
-            null,
-            2
+  async function sendMessage() {
+    console.log(loginState);
+    // Check if the params object in env is not null
+    const message = process.env[req.params.id];
+    const userId = await client.user.getIdByUsername(
+      process.env.IG_USERNAME_DESTINATION
+    );
+    const thread = await client.entity.directThread([userId.toString()]);
+    // Check if the messages have been confirmed
+    if (
+      message &&
+      (!process.env[`${req.params.id}_CF_1`] ||
+        !process.env[`${req.params.id}_CF_2`] ||
+        process.env[`${req.params.id}_CF_1`] === "false" ||
+        process.env[`${req.params.id}_CF_2`] === "false")
+    )
+      await thread
+        .broadcastText(message.replace(/\\n/g, "\n"))
+        .then(() =>
+          res.status(200).send(
+            JSON.stringify(
+              {
+                statusCode: 200,
+                statusMessage: "Ok",
+                message: "Message sent successfully.",
+              },
+              null,
+              2
+            )
           )
         )
-      )
-      .catch((err) => {
-        errorReporter(err);
-        res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-      });
-  else
-    res.status(200).send(
-      JSON.stringify(
-        {
-          statusCode: 200,
-          statusMessage: "Ok",
-        },
-        null,
-        2
-      )
-    );
+        .catch((err) => {
+          errorReporter(err);
+          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+        });
+    else
+      res.status(200).send(
+        JSON.stringify(
+          {
+            statusCode: 200,
+            statusMessage: "Ok",
+          },
+          null,
+          2
+        )
+      );
+  }
+
+  // Check if the user is logged in
+  async function checkLogin() {
+    console.log(loginState);
+
+    if (loginState) sendMessage();
+    else if (loginError)
+      res.status(400).send(
+        JSON.stringify(
+          {
+            statusCode: 400,
+            statusMessage: "Bad Request",
+            message: "Login error.",
+          },
+          null,
+          2
+        )
+      );
+    else setTimeout(() => checkLogin(), 1000);
+  }
+
+  checkLogin();
 });
 
 module.exports = router;
