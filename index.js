@@ -111,12 +111,14 @@ const herokuRouter = require("./routes/heroku.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
 const instagramRouter = require("./routes/instagram.route");
 const pipedreamRouter = require("./routes/pipedream.route");
+const verificationRouter = require("./routes/verification.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
 app.use("/instagram", instagramRouter);
 app.use("/heroku", herokuRouter);
 app.use("/pipedream", pipedreamRouter);
+app.use("/verification", verificationRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
