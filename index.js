@@ -3,6 +3,8 @@ const helmet = require("helmet");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 
+// Load the environment variables on development environment
+// Also, load the crash reporter on production and staging environments
 if (
   process.env.NODE_ENV !== "production" &&
   process.env.NODE_ENV !== "staging"
@@ -78,8 +80,11 @@ app.use((req, res, next) => {
     .toString()
     .split(":");
 
+  // Exclude Basic Auth for following routes
+  // "/", "/line/webhooks", "/verification"
   if (
     req.path === "/" ||
+    req.path === "/verification" ||
     (req.path === "/line/webhooks" && req.method === "POST") ||
     (login &&
       password &&
@@ -111,12 +116,14 @@ const herokuRouter = require("./routes/heroku.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
 const instagramRouter = require("./routes/instagram.route");
 const pipedreamRouter = require("./routes/pipedream.route");
+const verificationRouter = require("./routes/verification.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
 app.use("/instagram", instagramRouter);
 app.use("/heroku", herokuRouter);
 app.use("/pipedream", pipedreamRouter);
+app.use("/verification", verificationRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);

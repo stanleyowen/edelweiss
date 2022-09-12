@@ -51,7 +51,9 @@ router.post("/webhooks", (req, res) => {
         // Stop the loop if the word is included in the keywords
         if (
           validateKeywords("okay", text[idx]) ||
-          validateKeywords("laugh", text[idx])
+          validateKeywords("laugh", text[idx]) ||
+          validateKeywords("greetings", text[idx]) ||
+          validateKeywords("goodbye", text[idx])
         )
           isContinue = false;
 
@@ -61,6 +63,14 @@ router.post("/webhooks", (req, res) => {
           );
         else if (validateKeywords("laugh", text[idx]))
           replayMessageReaction("laugh", req.body, (cb) =>
+            res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
+          );
+        else if (validateKeywords("greetings", text[idx]))
+          replayMessageReaction("greetings", req.body, (cb) =>
+            res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
+          );
+        else if (validateKeywords("goodbye", text[idx]))
+          replayMessageReaction("goodbye", req.body, (cb) =>
             res.status(cb.statusCode).send(JSON.stringify(cb, null, 2))
           );
 
