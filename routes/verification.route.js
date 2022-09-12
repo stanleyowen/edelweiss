@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
 
   updateHerokuEnvVars(
     appName,
-    { DAILY_1_CF_MESSAGE_1: "true", DAILY_1_CF_MESSAGE_2: "true" },
+    { DAILY_1_CF_1: "true", DAILY_1_CF_2: "true" },
     (cb) => {
       res
         .status(cb.statusCode)
