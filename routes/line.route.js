@@ -7,6 +7,7 @@ const {
   validateBotCommands,
   replayMessageReaction,
 } = require("../lib/lineOperation");
+const { fetchData } = require("../lib/detaOperation");
 
 const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -37,7 +38,12 @@ router.post("/webhooks", (req, res) => {
       isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
-      axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
+      axios.post(`${process.env.WEBHOOK_URL}`, {
+        content:
+          "**Info** :information_source:\n```json\n" +
+          JSON.stringify(req.body, null, 2) +
+          "```",
+      });
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
@@ -96,50 +102,52 @@ router.post("/webhooks", (req, res) => {
 
 // Send message to destination user with id params
 router.get("/:id", (req, res) => {
-  // Check if the params object in env is not null
-  const message = process.env[req.params.id];
+  fetchData((data) => {
+    const message = data.data[req.params.id];
+    console.log(data);
 
-  // Check if the messages have been confirmed
-  if (
-    message &&
-    (!process.env[`${req.params.id}_CF_1`] ||
-      !process.env[`${req.params.id}_CF_2`] ||
-      process.env[`${req.params.id}_CF_1`] === "false" ||
-      process.env[`${req.params.id}_CF_2`] === "false")
-  )
-    client
-      .multicast(clientDestination, {
-        type: "text",
-        text: message.replace(/\\n/g, "\n"),
-      })
-      .then(() =>
-        res.status(200).send(
-          JSON.stringify(
-            {
-              statusCode: 200,
-              statusMessage: "Ok",
-              message: "Message sent successfully.",
-            },
-            null,
-            2
+    // Check if the messages have been confirmed
+    if (
+      message &&
+      (!data.data[`${req.params.id}_CF_1`] ||
+        !data.data[`${req.params.id}_CF_2`] ||
+        data.data[`${req.params.id}_CF_1`] === false ||
+        data.data[`${req.params.id}_CF_2`] === false)
+    )
+      client
+        .multicast(clientDestination, {
+          type: "text",
+          text: message.replace(/\\n/g, "\n"),
+        })
+        .then(() =>
+          res.status(200).send(
+            JSON.stringify(
+              {
+                statusCode: 200,
+                statusMessage: "Ok",
+                message: "Message sent successfully.",
+              },
+              null,
+              2
+            )
           )
         )
-      )
-      .catch((err) => {
-        errorReporter(err);
-        res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
-      });
-  else
-    res.status(200).send(
-      JSON.stringify(
-        {
-          statusCode: 200,
-          statusMessage: "Ok",
-        },
-        null,
-        2
-      )
-    );
+        .catch((err) => {
+          errorReporter(err);
+          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+        });
+    else
+      res.status(200).send(
+        JSON.stringify(
+          {
+            statusCode: 200,
+            statusMessage: "Ok",
+          },
+          null,
+          2
+        )
+      );
+  });
 });
 
 module.exports = router;
