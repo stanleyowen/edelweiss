@@ -5,6 +5,7 @@ micros:
     src: ./
     engine: nodejs16
     primary: true
+    public: true
     presets:
       env:
         - name: NODE_ENV
@@ -25,8 +26,3 @@ micros:
           default: your-webhook-url
         - name: PIPEDREAM_API_KEY
           default: your-pipedream-api-key
-        - name: DAILY_1
-          default: false
-        - name: DAILY_1_CF_MESSAGE_1
-        - name: DAILY_1_CF_MESSAGE_2
-        - name: UPDATE_EVENT
