@@ -114,15 +114,13 @@ const mainRouter = require("./routes/main.route");
 const detaRouter = require("./routes/deta.route");
 const lineRouter = require("./routes/line.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
-// const instagramRouter = require("./routes/instagram.route");
-const pipedreamRouter = require("./routes/pipedream.route");
+const instagramRouter = require("./routes/instagram.route");
 const verificationRouter = require("./routes/verification.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
-// app.use("/instagram", instagramRouter);
+app.use("/instagram", instagramRouter);
 app.use("/deta", detaRouter);
-app.use("/pipedream", pipedreamRouter);
 app.use("/verification", verificationRouter);
 
 app.listen(PORT, () => {
