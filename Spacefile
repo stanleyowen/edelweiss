@@ -1,0 +1,32 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: edelweiss
+    src: ./
+    engine: nodejs16
+    primary: true
+    presets:
+      env:
+        - name: NODE_ENV
+          default: production
+        - name: CORS_ORIGIN
+          default: http://localhost:3000
+        - name: HTTP_AUTH_USERNAME
+          default: admin
+        - name: HTTP_AUTH_PASSWORD
+          default: admin
+        - name: SERVER_URL
+          default: https://edelweiss.deta.dev
+        - name: LINE_CHANNEL_ACCESS_TOKEN
+          default: your-line-channel-access-token
+        - name: LINE_DESTINATION_ID
+          default: your-line-destination-id
+        - name: WEBHOOK_URL
+          default: your-webhook-url
+        - name: PIPEDREAM_API_KEY
+          default: your-pipedream-api-key
+        - name: DAILY_1
+          default: false
+        - name: DAILY_1_CF_MESSAGE_1
+        - name: DAILY_1_CF_MESSAGE_2
+        - name: UPDATE_EVENT
