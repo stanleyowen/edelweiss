@@ -113,7 +113,6 @@ app.use((req, res, next) => {
 const mainRouter = require("./routes/main.route");
 const detaRouter = require("./routes/deta.route");
 const lineRouter = require("./routes/line.route");
-const herokuRouter = require("./routes/heroku.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
 // const instagramRouter = require("./routes/instagram.route");
 const pipedreamRouter = require("./routes/pipedream.route");
@@ -123,7 +122,6 @@ app.use("/line", lineRouter);
 app.use("/whatsapp", whatsAppRouter);
 // app.use("/instagram", instagramRouter);
 app.use("/deta", detaRouter);
-app.use("/heroku", herokuRouter);
 app.use("/pipedream", pipedreamRouter);
 app.use("/verification", verificationRouter);
 
