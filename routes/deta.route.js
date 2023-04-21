@@ -9,7 +9,7 @@ router.get("/", (req, res) =>
 
 router.put("/", (req, res) =>
   // Get the key from the first property of the body object
-  putData(req.body, req.query, (cb) =>
+  putData(req.body, (cb) =>
     res.status(cb.statusCode).send(JSON.stringify(cb.data, null, 2))
   )
 );
