@@ -24,5 +24,3 @@ micros:
           default: your-line-destination-id
         - name: WEBHOOK_URL
           default: your-webhook-url
-        - name: PIPEDREAM_API_KEY
-          default: your-pipedream-api-key

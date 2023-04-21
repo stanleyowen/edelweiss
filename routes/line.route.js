@@ -38,7 +38,9 @@ router.post("/webhooks", (req, res) => {
       isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
-      axios.post(`${process.env.WEBHOOK_URL}/line`, req.body);
+      axios.post(`${process.env.WEBHOOK_URL}`, {
+        content: "```json\n" + JSON.stringify(cb.data, null, 2) + "```",
+      });
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
