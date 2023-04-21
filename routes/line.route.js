@@ -111,8 +111,8 @@ router.get("/:id", (req, res) => {
       message &&
       (!data.data[`${req.params.id}_CF_1`] ||
         !data.data[`${req.params.id}_CF_2`] ||
-        data.data[`${req.params.id}_CF_1`] === "false" ||
-        data.data[`${req.params.id}_CF_2`] === "false")
+        data.data[`${req.params.id}_CF_1`] === false ||
+        data.data[`${req.params.id}_CF_2`] === false)
     )
       client
         .multicast(clientDestination, {
