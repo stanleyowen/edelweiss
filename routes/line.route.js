@@ -39,7 +39,10 @@ router.post("/webhooks", (req, res) => {
 
     if (process.env.NODE_ENV !== "development")
       axios.post(`${process.env.WEBHOOK_URL}`, {
-        content: "```json\n" + JSON.stringify(cb.data, null, 2) + "```",
+        content:
+          "**Info** :information_source:\n```json\n" +
+          JSON.stringify(req.body, null, 2) +
+          "```",
       });
 
     // Check whether its a bot command
