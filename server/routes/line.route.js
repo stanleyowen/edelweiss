@@ -28,17 +28,19 @@ function removeDuplicates(str) {
   return sentences.join(" ");
 }
 
-router.post("/webhooks", (req, res) => {
+router.post("/webhooks", async (req, res) => {
   // Check if request body object is not null
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
     // Split words into an array
-    const text = removeDuplicates(req.body.events[0].message.text).split(" ");
+    const text = removeDuplicates(
+      String(req.body.events[0].message.text).toLowerCase()
+    ).split(" ");
     let idx = 0,
       isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
-      axios.post(`${process.env.WEBHOOK_URL}`, {
+      await axios.post(`${process.env.WEBHOOK_URL}`, {
         content:
           "**Info** :information_source:\n```json\n" +
           JSON.stringify(req.body, null, 2) +

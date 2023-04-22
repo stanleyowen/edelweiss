@@ -13,7 +13,7 @@ function validateKeywords(category, message) {
   let isCategory = false;
 
   if (category === "okay")
-    key = ["ya", "sip", "yup", "ok", "ye", "thx", "thank"];
+    key = ["ya", "sip", "yup", "ok", "ye", "thx", "thank", "tenks"];
   if (category === "laugh") key = ["wk", "ha", "lol", "yey"];
   if (category === "greetings") key = ["hi", "hello", "hey", "hola"];
   if (category === "goodbye") key = ["bye", "bai", "gn", "sd", "nite"];
@@ -70,10 +70,10 @@ function validateBotCommands(commandType, token, cb) {
     // If the message has been replied once, the second reminder will be sent
     if (data.data[`${appEnv}_CF_1`] === true) {
       data.data[`${appEnv}_CF_2`] = true;
-      message = process.env[`${appEnv}_CF_MESSAGE_2`];
+      message = data.data[`${appEnv}_CF_MESSAGE_2`];
     } else {
       data.data[`${appEnv}_CF_1`] = true;
-      message = process.env[`${appEnv}_CF_MESSAGE_1`];
+      message = data.data[`${appEnv}_CF_MESSAGE_1`];
     }
 
     // Update the data
