@@ -28,7 +28,7 @@ function removeDuplicates(str) {
   return sentences.join(" ");
 }
 
-router.post("/webhooks", (req, res) => {
+router.post("/webhooks", async (req, res) => {
   // Check if request body object is not null
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
@@ -40,7 +40,7 @@ router.post("/webhooks", (req, res) => {
       isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
-      axios.post(`${process.env.WEBHOOK_URL}`, {
+      await axios.post(`${process.env.WEBHOOK_URL}`, {
         content:
           "**Info** :information_source:\n```json\n" +
           JSON.stringify(req.body, null, 2) +
