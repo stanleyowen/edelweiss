@@ -88,7 +88,15 @@ const Environment = ({ HOST_DOMAIN }: any) => {
         let body;
 
         if (method === 'delete') body = { [data.key]: null };
-        else body = { [data.key]: data.value };
+        else
+            body = {
+                [data.key]:
+                    data.value === 'true'
+                        ? true
+                        : data.value === 'false'
+                        ? false
+                        : data.value,
+            };
 
         if (method === 'add' || method === 'update')
             axios
