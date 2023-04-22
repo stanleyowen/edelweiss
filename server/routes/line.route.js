@@ -106,7 +106,6 @@ router.post("/webhooks", async (req, res) => {
 router.get("/:id", (req, res) => {
   fetchData((data) => {
     const message = data.data[req.params.id];
-    console.log(data);
 
     // Check if the messages have been confirmed
     if (

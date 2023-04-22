@@ -8,10 +8,8 @@ import Environment from './env.component';
 
 // eslint-disable-next-line
 const BaseLayout = ({
-    song,
     properties,
     songData,
-    handleSong,
     HOST_DOMAIN,
     handleChange,
 }: any) => {
@@ -20,8 +18,6 @@ const BaseLayout = ({
             {properties.activeTab === 'home' ? (
                 <Home
                     properties={properties}
-                    handleSong={handleSong}
-                    song={song}
                     songData={songData}
                     HOST_DOMAIN={HOST_DOMAIN}
                     handleChange={handleChange}

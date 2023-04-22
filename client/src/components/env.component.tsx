@@ -73,13 +73,12 @@ const Environment = ({ HOST_DOMAIN }: any) => {
                     key,
                     value: (value as any).toString(),
                 }));
-                console.log(data);
                 setEnv(data);
             });
     }
 
     useEffect(() => {
-        getEnv(properties.appName);
+        if (properties.appName) getEnv(properties.appName);
     }, [properties.appName]);
 
     const SubmitEnv = (method: 'update' | 'add' | 'delete') => {
