@@ -33,7 +33,9 @@ router.post("/webhooks", (req, res) => {
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
     // Split words into an array
-    const text = removeDuplicates(req.body.events[0].message.text).split(" ");
+    const text = removeDuplicates(
+      String(req.body.events[0].message.text).toLowerCase()
+    ).split(" ");
     let idx = 0,
       isContinue = true;
 
