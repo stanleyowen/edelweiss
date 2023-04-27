@@ -12,7 +12,6 @@ const { fetchData } = require("../lib/detaOperation");
 const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
 });
-const clientDestination = process.env.LINE_DESTINATION_ID.split(",");
 
 function removeDuplicates(str) {
   // Split words into an array
@@ -36,6 +35,8 @@ router.post("/webhooks", async (req, res) => {
     const text = removeDuplicates(
       String(req.body.events[0].message.text).toLowerCase()
     ).split(" ");
+    const { userId } = req.body.events[0].source;
+
     let idx = 0,
       isContinue = true;
 
@@ -49,8 +50,8 @@ router.post("/webhooks", async (req, res) => {
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
-    if (text[0].includes("/") && text[0].indexOf("/") === 0)
-      validateBotCommands(text[0], req.body.events[0].replyToken, (cb) =>
+    if (userId && text[0].includes("/") && text[0].indexOf("/") === 0)
+      validateBotCommands(userId, text, req.body.events[0].replyToken, (cb) =>
         res.status(cb.statusCode).send(cb)
       );
     else {
@@ -103,20 +104,18 @@ router.post("/webhooks", async (req, res) => {
 });
 
 // Send message to destination user with id params
-router.get("/:id", (req, res) => {
+router.get("/:id/:uid", (req, res) => {
+  const { uid, id } = req.params;
   fetchData((data) => {
-    const message = data.data[req.params.id];
+    const message = data.data[id];
 
     // Check if the messages have been confirmed
     if (
       message &&
-      (!data.data[`${req.params.id}_CF_1`] ||
-        !data.data[`${req.params.id}_CF_2`] ||
-        data.data[`${req.params.id}_CF_1`] === false ||
-        data.data[`${req.params.id}_CF_2`] === false)
+      (!data.data[`${uid}_${id}_CF_1`] || !data.data[`${uid}_${id}_CF_2`])
     )
       client
-        .multicast(clientDestination, {
+        .multicast(uid.split(","), {
           type: "text",
           text: message.replace(/\\n/g, "\n"),
         })
