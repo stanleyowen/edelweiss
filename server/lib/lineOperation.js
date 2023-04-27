@@ -7,6 +7,28 @@ const client = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
 });
 
+function sendReplyMessage(token, message, cb) {
+  client
+    .replyMessage(token, {
+      type: "text",
+      text: message?.replace(/\\n/g, "\n"),
+    })
+    .then(() =>
+      cb({
+        statusCode: 200,
+        statusMessage: "Ok",
+        message: "Reply Message sent successfully.",
+      })
+    )
+    .catch((err) => {
+      errorReporter(err);
+      cb({
+        statusCode: 400,
+        ...err,
+      });
+    });
+}
+
 function validateKeywords(category, message) {
   // Get category and save the category keywords to key
   let key = [];
@@ -58,46 +80,40 @@ function replayMessageReaction(category, body, cb) {
     });
 }
 
-function validateBotCommands(commandType, token, cb) {
-  let appEnv = null,
-    message = null;
+function validateBotCommands(userId, commandType, token, cb) {
+  const command = commandType[0],
+    variable = String(commandType[1]).toUpperCase();
+  let message = null;
 
   // Get the list of data from Deta
   fetchData((data) => {
-    if (commandType === "/done") appEnv = "DAILY_1";
+    if (command !== "/done" || !variable)
+      sendReplyMessage(token, "Invalid command")
+        .then((data) => cb(data))
+        .catch((err) => cb(err));
 
     // Check whether the message has been replied
     // If the message has been replied once, the second reminder will be sent
-    if (data.data[`${appEnv}_CF_1`] === true) {
-      data.data[`${appEnv}_CF_2`] = true;
-      message = data.data[`${appEnv}_CF_MESSAGE_2`];
+    if (
+      data.data[`${userId}_${variable}_CF_1`] ||
+      data.data[`${userId}_${variable}_CF_2`]
+    ) {
+      data.data[`${userId}_${variable}_CF_1`] === true
+        ? (data.data[`${userId}_${variable}_CF_2`] = true)
+        : (data.data[`${userId}_${variable}_CF_1`] = true);
+      message = data.data[`${variable}_CF_MESSAGE_2`];
     } else {
-      data.data[`${appEnv}_CF_1`] = true;
-      message = data.data[`${appEnv}_CF_MESSAGE_1`];
+      data.data[`${userId}_${variable}_CF_1`] === true
+        ? (data.data[`${userId}_${variable}_CF_2`] = true)
+        : (data.data[`${userId}_${variable}_CF_1`] = true);
+      message = data.data[`${variable}_CF_MESSAGE_1`];
     }
 
-    // Update the data
     putData(data.data, () =>
       // Sent confirmation message to the user
-      client
-        .replyMessage(token, {
-          type: "text",
-          text: message?.replace(/\\n/g, "\n"),
-        })
-        .then(() =>
-          cb({
-            statusCode: 200,
-            statusMessage: "Ok",
-            message: "Reply Message sent successfully.",
-          })
-        )
-        .catch((err) => {
-          errorReporter(err);
-          cb({
-            statusCode: 400,
-            ...err,
-          });
-        })
+      sendReplyMessage(token, message)
+        .then((data) => cb(data))
+        .catch((err) => cb(err))
     );
   });
 }
