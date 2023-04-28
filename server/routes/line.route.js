@@ -137,6 +137,23 @@ router.get("/:id/:uid", (req, res) => {
         )
         .catch((err) => {
           errorReporter(err);
+
+          // If the error status code is 429, change the channel access token
+          if (err.statusCode === 429) {
+            fetchData((data) => {
+              let channelAccessToken = data.data["LINE_CHANNEL_ACCESS_TOKEN"];
+              if (channelAccessToken === "LINE_CHANNEL_ACCESS_TOKEN")
+                channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN_BACKUP";
+              else channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN";
+              putData(
+                { LINE_CHANNEL_ACCESS_TOKEN: channelAccessToken },
+                (data) => {
+                  console.info(data);
+                }
+              );
+            });
+          }
+
           res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
         });
     else
