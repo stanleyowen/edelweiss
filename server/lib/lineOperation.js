@@ -83,14 +83,18 @@ function replayMessageReaction(category, body, cb) {
 function validateBotCommands(userId, commandType, token, cb) {
   const command = commandType[0],
     variable = String(commandType[1]).toUpperCase();
-  let message = null;
+  let message = null,
+    nickname = null;
 
   // Get the list of data from Deta
   fetchData((data) => {
-    if (command !== "/done" || !variable)
-      sendReplyMessage(token, "Invalid command")
-        .then((data) => cb(data))
-        .catch((err) => cb(err));
+    // Check whether the command is valid
+    // If it is started with /done, check whether the variable is valid
+    console.log(data.data[variable], variable, commandType);
+    if (command !== "/done" || !variable || !data.data[variable])
+      sendReplyMessage(token, "Invalid command", (data) => {
+        cb(data);
+      });
 
     // Check whether the message has been replied
     // If the message has been replied once, the second reminder will be sent
@@ -109,12 +113,18 @@ function validateBotCommands(userId, commandType, token, cb) {
       message = data.data[`${variable}_CF_MESSAGE_1`];
     }
 
-    putData(data.data, () =>
-      // Sent confirmation message to the user
-      sendReplyMessage(token, message)
-        .then((data) => cb(data))
-        .catch((err) => cb(err))
-    );
+    nickname = data.data[`NICKNAME_${userId}`] ?? "User";
+    if (message && data.data[variable])
+      putData(data.data, () =>
+        // Sent confirmation message to the user
+        sendReplyMessage(
+          token,
+          message.replace("{nickname}", nickname),
+          (data) => {
+            return cb(data);
+          }
+        )
+      );
   });
 }
 

@@ -107,7 +107,8 @@ router.post("/webhooks", async (req, res) => {
 router.get("/:id/:uid", (req, res) => {
   const { uid, id } = req.params;
   fetchData((data) => {
-    const message = data.data[id];
+    const message = data.data[id],
+      nickname = data.data[`NICKNAME_${uid}`];
 
     // Check if the messages have been confirmed
     if (
@@ -117,7 +118,7 @@ router.get("/:id/:uid", (req, res) => {
       client
         .multicast(uid.split(","), {
           type: "text",
-          text: message.replace(/\\n/g, "\n"),
+          text: message.replace("{nickname}", nickname).replace(/\\n/g, "\n"),
         })
         .then(() =>
           res.status(200).send(
