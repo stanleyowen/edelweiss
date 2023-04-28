@@ -8,10 +8,13 @@ const {
   replayMessageReaction,
 } = require("../lib/lineOperation");
 const { fetchData } = require("../lib/detaOperation");
+const { getToken } = require("../lib/getToken");
 
-const client = new line.Client({
-  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
-});
+let client = null;
+getToken(
+  (token) =>
+    (client = new line.Client({ channelAccessToken: process.env[token] }))
+);
 
 function removeDuplicates(str) {
   // Split words into an array

@@ -2,10 +2,13 @@ const line = require("@line/bot-sdk");
 const stickers = require("../lib/sticker.lib.json");
 const errorReporter = require("../lib/errorReporter");
 const { fetchData, putData } = require("./detaOperation");
+const { getToken } = require("./getToken");
 
-const client = new line.Client({
-  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
-});
+let client = null;
+getToken(
+  (token) =>
+    (client = new line.Client({ channelAccessToken: process.env[token] }))
+);
 
 function sendReplyMessage(token, message, cb) {
   client
@@ -91,9 +94,13 @@ function validateBotCommands(userId, commandType, token, cb) {
     // Check whether the command is valid
     // If it is started with /done, check whether the variable is valid
     if (command !== "/done" || !variable || !data.data[variable])
-      return sendReplyMessage(token, "Invalid command", (data) => {
-        cb(data);
-      });
+      return sendReplyMessage(
+        token,
+        data.data["INVALID_COMMAND"] ?? "Invalid command",
+        (data) => {
+          cb(data);
+        }
+      );
 
     // Check whether the message has been replied
     // If the message has been replied once, the second reminder will be sent
