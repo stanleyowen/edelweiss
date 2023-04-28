@@ -90,9 +90,8 @@ function validateBotCommands(userId, commandType, token, cb) {
   fetchData((data) => {
     // Check whether the command is valid
     // If it is started with /done, check whether the variable is valid
-    console.log(data.data[variable], variable, commandType);
     if (command !== "/done" || !variable || !data.data[variable])
-      sendReplyMessage(token, "Invalid command", (data) => {
+      return sendReplyMessage(token, "Invalid command", (data) => {
         cb(data);
       });
 
@@ -114,17 +113,16 @@ function validateBotCommands(userId, commandType, token, cb) {
     }
 
     nickname = data.data[`NICKNAME_${userId}`] ?? "User";
-    if (message && data.data[variable])
-      putData(data.data, () =>
-        // Sent confirmation message to the user
-        sendReplyMessage(
-          token,
-          message.replace("{nickname}", nickname),
-          (data) => {
-            return cb(data);
-          }
-        )
-      );
+    putData(data.data, () =>
+      // Sent confirmation message to the user
+      sendReplyMessage(
+        token,
+        message.replace("{nickname}", nickname),
+        (data) => {
+          return cb(data);
+        }
+      )
+    );
   });
 }
 

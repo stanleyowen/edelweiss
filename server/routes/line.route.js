@@ -32,9 +32,7 @@ router.post("/webhooks", async (req, res) => {
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
     // Split words into an array
-    const text = removeDuplicates(
-      String(req.body.events[0].message.text).toLowerCase()
-    ).split(" ");
+    let text = String(req.body.events[0].message.text).toLowerCase().split(" ");
     const { userId } = req.body.events[0].source;
 
     let idx = 0,
@@ -55,6 +53,7 @@ router.post("/webhooks", async (req, res) => {
         res.status(cb.statusCode).send(cb)
       );
     else {
+      text = removeDuplicates(text.join(" ")).split(" ");
       // Loop each word while the index is less than the length of the text and isContinue is true
       while (isContinue && idx < text.length) {
         // Stop the loop if the word is included in the keywords
