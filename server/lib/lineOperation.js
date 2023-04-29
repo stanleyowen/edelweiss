@@ -120,15 +120,20 @@ function validateBotCommands(userId, commandType, token, cb) {
     }
 
     nickname = data.data[`NICKNAME_${userId}`] ?? "User";
-    putData(data.data, () =>
-      // Sent confirmation message to the user
-      sendReplyMessage(
-        token,
-        message.replace("{nickname}", nickname),
-        (data) => {
-          return cb(data);
-        }
-      )
+    putData(
+      {
+        [`${userId}_${variable}_CF_1`]: data.data[`${userId}_${variable}_CF_1`],
+        [`${userId}_${variable}_CF_2`]: data.data[`${userId}_${variable}_CF_2`],
+      },
+      () =>
+        // Sent confirmation message to the user
+        sendReplyMessage(
+          token,
+          message.replace("{nickname}", nickname),
+          (data) => {
+            return cb(data);
+          }
+        )
     );
   });
 }

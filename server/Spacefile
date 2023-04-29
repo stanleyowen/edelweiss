@@ -20,7 +20,7 @@ micros:
           default: https://edelweiss.deta.dev
         - name: LINE_CHANNEL_ACCESS_TOKEN
           default: your-line-channel-access-token
-        - name: LINE_DESTINATION_ID
-          default: your-line-destination-id
+        - name: LINE_CHANNEL_ACCESS_TOKEN_BACKUP
+          default: your-backup-line-channel-access-token
         - name: WEBHOOK_URL
           default: your-webhook-url

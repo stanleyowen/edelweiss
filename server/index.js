@@ -113,11 +113,13 @@ app.use((req, res, next) => {
 const mainRouter = require("./routes/main.route");
 const detaRouter = require("./routes/deta.route");
 const lineRouter = require("./routes/line.route");
+const resetRouter = require("./routes/reset.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
 const instagramRouter = require("./routes/instagram.route");
 const verificationRouter = require("./routes/verification.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
+app.use("/reset", resetRouter);
 app.use("/whatsapp", whatsAppRouter);
 app.use("/instagram", instagramRouter);
 app.use("/deta", detaRouter);
