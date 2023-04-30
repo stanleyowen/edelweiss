@@ -135,8 +135,8 @@ router.get("/:id/:uid", (req, res) => {
             )
           )
         )
-        .catch((err) => {
-          errorReporter(err);
+        .catch(async (err) => {
+          await errorReporter(err);
 
           // If the error status code is 429, change the channel access token
           if (err.statusCode === 429) {
@@ -145,23 +145,22 @@ router.get("/:id/:uid", (req, res) => {
               if (channelAccessToken === "LINE_CHANNEL_ACCESS_TOKEN")
                 channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN_BACKUP";
               else channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN";
-              putData(
-                { LINE_CHANNEL_ACCESS_TOKEN: channelAccessToken },
-                (data) => {
-                  console.info(data);
-                }
+
+              putData({ LINE_CHANNEL_ACCESS_TOKEN: channelAccessToken }, () =>
+                res.status(err.statusCode).send(JSON.stringify(err, null, 2))
               );
             });
-          }
-
-          res.status(err.statusCode ?? 400).send(JSON.stringify(err, null, 2));
+          } else
+            res
+              .status(err.statusCode ?? 400)
+              .send(JSON.stringify(err, null, 2));
         });
     else
       res.status(200).send(
         JSON.stringify(
           {
             statusCode: 200,
-            statusMessage: "Ok",
+            statusMessage: "Done",
           },
           null,
           2
