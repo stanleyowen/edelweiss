@@ -12,8 +12,6 @@ if (
   require("dotenv").config();
 } else require("./lib/crashReporter");
 
-require("./bot.js");
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 const limiter = {
