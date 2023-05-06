@@ -12,8 +12,20 @@ process.on("unhandledRejection", (reason, promise) => {
     originalError: {
       name: "Error",
       message: "Unhandled Rejection",
-      reason,
-      promise,
+      reason: reason
+        ? {
+            name: reason.name,
+            message: reason.message,
+            stack: reason.stack,
+          }
+        : reason,
+      promise: promise
+        ? {
+            name: promise.name,
+            message: promise.message,
+            stack: promise.stack,
+          }
+        : promise,
     },
   };
 
