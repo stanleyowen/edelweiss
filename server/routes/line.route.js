@@ -35,27 +35,33 @@ router.post("/webhooks", async (req, res) => {
   if (Object.keys(req.body).length > 0) {
     // Removes duplicate characters from the string
     // Split words into an array
-    let text = String(req.body.events[0].message.text).toLowerCase().split(" ");
+    let type = req.body.events[0]?.type,
+      text = null;
+    if (type === "message")
+      text = String(req.body.events[0].message.text).toLowerCase().split(" ");
     const { userId } = req.body.events[0].source;
 
     let idx = 0,
       isContinue = true;
 
     if (process.env.NODE_ENV !== "development")
-      await axios.post(`${process.env.WEBHOOK_URL}`, {
-        content:
-          "**Info** :information_source:\n```json\n" +
-          JSON.stringify(req.body, null, 2) +
-          "```",
-      });
+      await axios.post(
+        `${process.env.WEBHOOK_URL}?thread_id=${process.env.INCOMING_MESSAGE_THREAD_ID}`,
+        {
+          content:
+            "**Info** :information_source:\n```json\n" +
+            JSON.stringify(req.body, null, 2) +
+            "```",
+        }
+      );
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'
-    if (userId && text[0].includes("/") && text[0].indexOf("/") === 0)
+    if (userId && text && text[0].includes("/") && text[0].indexOf("/") === 0)
       validateBotCommands(userId, text, req.body.events[0].replyToken, (cb) =>
         res.status(cb.statusCode).send(cb)
       );
-    else {
+    else if (text) {
       text = removeDuplicates(text.join(" ")).split(" ");
       // Loop each word while the index is less than the length of the text and isContinue is true
       while (isContinue && idx < text.length) {
@@ -115,6 +121,7 @@ router.get("/:id/:uid", (req, res) => {
     // Check if the messages have been confirmed
     if (
       message &&
+      nickname &&
       (!data.data[`${uid}_${id}_CF_1`] || !data.data[`${uid}_${id}_CF_2`])
     )
       client
