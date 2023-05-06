@@ -24,3 +24,9 @@ micros:
           default: your-backup-line-channel-access-token
         - name: WEBHOOK_URL
           default: your-webhook-url
+        - name: ERROR_THREAD_ID
+          default: your-error-thread-id
+        - name: INCOMING_MESSAGE_THREAD_ID
+          default: your-incoming-message-thread-id
+        - name: INCOMING_REQUEST_THREAD_ID
+          default: your-incoming-request-thread-id

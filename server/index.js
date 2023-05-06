@@ -1,4 +1,5 @@
 const cors = require("cors");
+const axios = require("axios");
 const helmet = require("helmet");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
@@ -52,6 +53,33 @@ app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 app.use((_, res, next) => {
   res.header("Content-Type", "application/json; charset=UTF-8");
   return next();
+});
+
+app.use(async function (req, res, next) {
+  await axios
+    .post(
+      `${process.env.WEBHOOK_URL}?thread_id=${process.env.INCOMING_REQUEST_THREAD_ID}
+    `,
+      {
+        content:
+          "```" +
+          req.method +
+          " " +
+          req.protocol +
+          "://" +
+          req.get("host") +
+          req.originalUrl +
+          " from " +
+          req.ip +
+          " with origin " +
+          req.get("origin") +
+          "\n" +
+          JSON.stringify(req.headers, null, 2) +
+          "```",
+      }
+    )
+    .catch((error) => console.error(error));
+  next();
 });
 
 app.use(

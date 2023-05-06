@@ -10,12 +10,15 @@ function errorReporter(error) {
     process.env.NODE_ENV === "production"
   ) {
     axios
-      .post(`${process.env.WEBHOOK_URL}`, {
-        content:
-          "**Error Reporter** :x:\n```json\n" +
-          JSON.stringify(error, null, 2) +
-          "```",
-      })
+      .post(
+        `${process.env.WEBHOOK_URL}?thread_id=${process.env.ERROR_THREAD_ID}`,
+        {
+          content:
+            "**Error Reporter** :x:\n```json\n" +
+            JSON.stringify(error, null, 2) +
+            "```",
+        }
+      )
       .then(() => console.info("Error data sent"))
       .catch((err) => console.error(err));
   }
