@@ -125,7 +125,7 @@ router.get("/:id/:uid", (req, res) => {
       (!data.data[`${uid}_${id}_CF_1`] || !data.data[`${uid}_${id}_CF_2`])
     )
       client
-        .multicast(uid.split(","), {
+        .pushMessage(uid, {
           type: "text",
           text: message.replace("{nickname}", nickname).replace(/\\n/g, "\n"),
         })

@@ -30,3 +30,5 @@ micros:
           default: your-incoming-message-thread-id
         - name: INCOMING_REQUEST_THREAD_ID
           default: your-incoming-request-thread-id
+        - name: SPACE_DETA_PROJECT_KEY
+          default: your-deta-project-key
