@@ -7,14 +7,20 @@ const {
   validateBotCommands,
   replayMessageReaction,
 } = require("../lib/lineOperation");
-const { fetchData } = require("../lib/detaOperation");
+const { fetchData, putData } = require("../lib/detaOperation");
 const { getToken } = require("../lib/getToken");
 
 let client = null;
-getToken(
-  (token) =>
-    (client = new line.Client({ channelAccessToken: process.env[token] }))
-);
+
+// Initialize it in the function so that it can be updated
+// later when the token is updated
+async function updateClientToken() {
+  await getToken((token) => {
+    client = new line.Client({ channelAccessToken: process.env[token] });
+  });
+}
+
+updateClientToken();
 
 function removeDuplicates(str) {
   // Split words into an array
@@ -153,8 +159,12 @@ router.get("/:id/:uid", (req, res) => {
                 channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN_BACKUP";
               else channelAccessToken = "LINE_CHANNEL_ACCESS_TOKEN";
 
-              putData({ LINE_CHANNEL_ACCESS_TOKEN: channelAccessToken }, () =>
-                res.status(err.statusCode).send(JSON.stringify(err, null, 2))
+              putData(
+                { LINE_CHANNEL_ACCESS_TOKEN: channelAccessToken },
+                async () => {
+                  await updateClientToken();
+                  res.status(err.statusCode).send(JSON.stringify(err, null, 2));
+                }
               );
             });
           } else
