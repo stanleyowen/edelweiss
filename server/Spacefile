@@ -6,6 +6,7 @@ micros:
     engine: nodejs16
     primary: true
     public: true
+    run: node index.js
     presets:
       env:
         - name: NODE_ENV
