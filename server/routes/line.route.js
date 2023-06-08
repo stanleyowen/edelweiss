@@ -27,7 +27,10 @@ function removeDuplicates(str) {
   // Remove duplicates from each word and push to sentences
   // Remove punctuation from each word and push to sentences except for the '/'
   const sentences = [];
-  const words = str.replace(/[^\w\s\/]/gi, "").split(" ");
+  const words = str
+    .replace(/[^\w\s\/]/gi, "")
+    .toLowerCase()
+    .split(" ");
 
   words.forEach((word) =>
     sentences.push([...new Set(word.split(""))].join(""))
@@ -42,24 +45,27 @@ router.post("/webhooks", async (req, res) => {
     // Removes duplicate characters from the string
     // Split words into an array
     let type = req.body.events[0]?.type,
+      messageTypes = null,
       text = null;
-    if (type === "message")
-      text = String(req.body.events[0].message.text).toLowerCase().split(" ");
-    const { userId } = req.body.events[0].source;
 
+    if (type === "message") messageTypes = req.body.events[0].message.type;
+    if (messageTypes === "text")
+      text = String(req.body.events[0].message.text).toLowerCase().split(" ");
+    else if (messageTypes === "sticker")
+      text = req.body.events[0].message.keywords;
+    const { userId } = req.body.events[0].source;
     let idx = 0,
       isContinue = true;
 
-    if (process.env.NODE_ENV !== "development")
-      await axios.post(
-        `${process.env.WEBHOOK_URL}?thread_id=${process.env.INCOMING_MESSAGE_THREAD_ID}`,
-        {
-          content:
-            "**Info** :information_source:\n```json\n" +
-            JSON.stringify(req.body, null, 2) +
-            "```",
-        }
-      );
+    await axios.post(
+      `${process.env.WEBHOOK_URL}?thread_id=${process.env.INCOMING_MESSAGE_THREAD_ID}`,
+      {
+        content:
+          "**Info** :information_source:\n```json\n" +
+          JSON.stringify(req.body, null, 2) +
+          "```",
+      }
+    );
 
     // Check whether its a bot command
     // A bot command is a word that starts with '/'

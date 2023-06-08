@@ -86,18 +86,7 @@ app.use(
   rateLimit({
     windowMs: 3600000, // 1 hour
     max: 100,
-    handler: (req, res) =>
-      res.status(429).send(JSON.stringify(limiter, null, 2)),
-  })
-);
-
-app.use(
-  "/heroku",
-  rateLimit({
-    windowMs: 60000, // 1 minute
-    max: 60,
-    handler: (req, res) =>
-      res.status(429).send(JSON.stringify(limiter, null, 2)),
+    handler: (_, res) => res.status(429).send(JSON.stringify(limiter, null, 2)),
   })
 );
 
@@ -121,7 +110,7 @@ app.use((req, res, next) => {
   )
     return next();
 
-  res
+  return res
     .set("WWW-Authenticate", 'Basic realm="401"')
     .status(401)
     .send(
