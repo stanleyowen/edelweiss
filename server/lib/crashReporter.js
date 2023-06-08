@@ -12,18 +12,33 @@ process.on("unhandledRejection", (reason, promise) => {
     originalError: {
       name: "Error",
       message: "Unhandled Rejection",
-      reason,
-      promise,
+      reason: reason
+        ? {
+            name: reason.name,
+            message: reason.message,
+            stack: reason.stack,
+          }
+        : reason,
+      promise: promise
+        ? {
+            name: promise.name,
+            message: promise.message,
+            stack: promise.stack,
+          }
+        : promise,
     },
   };
 
   axios
-    .post(`${process.env.WEBHOOK_URL}`, {
-      content:
-        "**Unhandled Rejection** :x:\n```json\n" +
-        JSON.stringify(data, null, 2) +
-        "```",
-    })
+    .post(
+      `${process.env.WEBHOOK_URL}?thread_id=${process.env.ERROR_THREAD_ID}`,
+      {
+        content:
+          "**Unhandled Rejection** :x:\n```json\n" +
+          JSON.stringify(data, null, 2) +
+          "```",
+      }
+    )
     .then(() => {
       console.error("Unhandled rejection data sent. Exiting app...");
       process.exit(1);
@@ -47,12 +62,15 @@ process.on("uncaughtException", (error) => {
   };
 
   axios
-    .post(`${process.env.WEBHOOK_URL}`, {
-      content:
-        "**Uncaught Exception** :x:\n```json\n" +
-        JSON.stringify(data, null, 2) +
-        "```",
-    })
+    .post(
+      `${process.env.WEBHOOK_URL}?thread_id=${process.env.ERROR_THREAD_ID}`,
+      {
+        content:
+          "**Uncaught Exception** :x:\n```json\n" +
+          JSON.stringify(data, null, 2) +
+          "```",
+      }
+    )
     .then(() => {
       console.warn("Uncaught exception data sent. Exiting app...");
       process.exit(1);

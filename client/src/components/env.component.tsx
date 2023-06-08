@@ -73,13 +73,12 @@ const Environment = ({ HOST_DOMAIN }: any) => {
                     key,
                     value: (value as any).toString(),
                 }));
-                console.log(data);
                 setEnv(data);
             });
     }
 
     useEffect(() => {
-        getEnv(properties.appName);
+        if (properties.appName) getEnv(properties.appName);
     }, [properties.appName]);
 
     const SubmitEnv = (method: 'update' | 'add' | 'delete') => {
@@ -88,7 +87,15 @@ const Environment = ({ HOST_DOMAIN }: any) => {
         let body;
 
         if (method === 'delete') body = { [data.key]: null };
-        else body = { [data.key]: data.value };
+        else
+            body = {
+                [data.key]:
+                    data.value === 'true'
+                        ? true
+                        : data.value === 'false'
+                        ? false
+                        : data.value,
+            };
 
         if (method === 'add' || method === 'update')
             axios

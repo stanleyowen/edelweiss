@@ -41,7 +41,7 @@ const About = () => {
                 <div className="flex w-80">
                     <AboutOutline />
                     <div className="ml-10">
-                        <p>Logger Dashboard</p>
+                        <p>Edelweiss</p>
                         <p className="small">Version: {packageInfo.version}</p>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ const About = () => {
                             className="p-15 w-100 no-capitalization"
                             onClick={() =>
                                 window.open(
-                                    'https://github.com/stanleyowen/logger/issues/new/choose'
+                                    'https://github.com/stanleyowen/edelweiss/issues/new/choose'
                                 )
                             }
                         >
@@ -106,7 +106,7 @@ const About = () => {
                             className="p-15 w-100 no-capitalization"
                             onClick={() =>
                                 window.open(
-                                    'https://github.com/stanleyowen/logger/releases'
+                                    'https://github.com/stanleyowen/edelweiss/releases'
                                 )
                             }
                         >
@@ -120,7 +120,7 @@ const About = () => {
                             className="p-15 w-100 no-capitalization"
                             onClick={() =>
                                 window.open(
-                                    'https://github.com/stanleyowen/logger/graphs/contributors'
+                                    'https://github.com/stanleyowen/edelweiss/graphs/contributors'
                                 )
                             }
                         >
@@ -144,17 +144,16 @@ const About = () => {
                         <i>Personal Information Collection</i>
                     </p>
                     <p>
-                        Logger Dashboard collects and stores information to
-                        provide our services.
+                        Edelweiss collects and stores information to provide our
+                        services.
                     </p>
                     <p className="mt-10">
                         <i>Non-Personal Information Collection</i>
                     </p>
                     <p>
-                        Logger Dashboard collects and stores data which are
-                        useful for logging, bugs, and fix crashes. All
-                        information sent is anonymous and free of any user or
-                        contextual data.
+                        Edelweiss collects and stores data which are useful for
+                        logging, bugs, and fix crashes. All information sent is
+                        anonymous and free of any user or contextual data.
                     </p>
                 </div>
             </Accordion>
@@ -168,11 +167,11 @@ const About = () => {
                 </AccordionSummary>
                 <div className="p-10">
                     <p>
-                        Logger Dashboard is an open source project published
-                        under the MIT License. You can view the source code and
-                        contribute to this project on{' '}
+                        Edelweiss is an open source project published under the
+                        MIT License. You can view the source code and contribute
+                        to this project on{' '}
                         <a
-                            href="https://github.com/stanleyowen/loofi-dashboard"
+                            href="https://github.com/stanleyowen/edelweiss"
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -182,7 +181,7 @@ const About = () => {
                     </p>
                     <code>
                         <p className="mt-10">
-                            <b>Copyright (c) 2022 Logger Dashboard</b>
+                            <b>Copyright (c) 2022 Edelweiss</b>
                         </p>
                         <p className="mt-10">
                             Permission is hereby granted, free of charge, to any

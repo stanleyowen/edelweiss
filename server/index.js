@@ -1,4 +1,5 @@
 const cors = require("cors");
+const axios = require("axios");
 const helmet = require("helmet");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
@@ -54,22 +55,38 @@ app.use((_, res, next) => {
   return next();
 });
 
+app.use(async function (req, res, next) {
+  await axios
+    .post(
+      `${process.env.WEBHOOK_URL}?thread_id=${process.env.INCOMING_REQUEST_THREAD_ID}
+    `,
+      {
+        content:
+          "```" +
+          req.method +
+          " " +
+          req.protocol +
+          "://" +
+          req.get("host") +
+          req.originalUrl +
+          " from " +
+          req.ip +
+          " with origin " +
+          req.get("origin") +
+          "\n" +
+          JSON.stringify(req.headers, null, 2) +
+          "```",
+      }
+    )
+    .catch((error) => console.error(error));
+  next();
+});
+
 app.use(
   rateLimit({
     windowMs: 3600000, // 1 hour
     max: 100,
-    handler: (req, res) =>
-      res.status(429).send(JSON.stringify(limiter, null, 2)),
-  })
-);
-
-app.use(
-  "/heroku",
-  rateLimit({
-    windowMs: 60000, // 1 minute
-    max: 60,
-    handler: (req, res) =>
-      res.status(429).send(JSON.stringify(limiter, null, 2)),
+    handler: (_, res) => res.status(429).send(JSON.stringify(limiter, null, 2)),
   })
 );
 
@@ -93,7 +110,7 @@ app.use((req, res, next) => {
   )
     return next();
 
-  res
+  return res
     .set("WWW-Authenticate", 'Basic realm="401"')
     .status(401)
     .send(
@@ -113,11 +130,13 @@ app.use((req, res, next) => {
 const mainRouter = require("./routes/main.route");
 const detaRouter = require("./routes/deta.route");
 const lineRouter = require("./routes/line.route");
+const resetRouter = require("./routes/reset.route");
 const whatsAppRouter = require("./routes/whatsapp.route");
 const instagramRouter = require("./routes/instagram.route");
 const verificationRouter = require("./routes/verification.route");
 app.use("/", mainRouter);
 app.use("/line", lineRouter);
+app.use("/reset", resetRouter);
 app.use("/whatsapp", whatsAppRouter);
 app.use("/instagram", instagramRouter);
 app.use("/deta", detaRouter);

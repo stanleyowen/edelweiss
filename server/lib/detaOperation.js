@@ -1,7 +1,10 @@
 const { Deta } = require("deta");
+const axios = require("axios");
 const errorReporter = require("../lib/errorReporter");
 
-const deta = Deta(process.env.DETA_PROJECT_KEY);
+const deta = Deta(
+  process.env.SPACE_DETA_PROJECT_KEY ?? process.env.DETA_PROJECT_KEY
+);
 const db = deta.Base("line");
 
 // Fetch all the data from the database
@@ -49,8 +52,24 @@ async function putData(data, cb) {
     });
 
     await db
-      .putMany(data)
-      .then((data) => cb({ statusCode: 200, data }))
+      .putMany(data.slice(0, 25))
+      .then(async (res) => {
+        // send the second request if the length of data is larger than 25
+        if (data.length > 25) {
+          let res = {};
+          data.slice(25).forEach((item) => {
+            res[item.key] = item.value;
+          });
+
+          await axios.put(`${process.env.SERVER_URL}/deta`, res, {
+            auth: {
+              username: process.env.HTTP_AUTH_USERNAME,
+              password: process.env.HTTP_AUTH_PASSWORD,
+            },
+          });
+        }
+        cb({ statusCode: 200, res });
+      })
       .catch((err) => {
         errorReporter(err);
         cb({ statusCode: err.statusCode ?? 400, data: err });

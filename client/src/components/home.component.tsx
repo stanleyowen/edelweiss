@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { MusicOutline, SettingsOutline } from '../lib/icons.component';
+import { License, MusicOutline, SettingsOutline } from '../lib/icons.component';
 
-const Home = ({ song, properties, handleChange }: any) => {
+const Home = ({ properties, handleChange }: any) => {
     const [greeting, setGreeting] = useState<string>();
 
     useEffect(() => {
@@ -10,15 +10,6 @@ const Home = ({ song, properties, handleChange }: any) => {
         else if (currentHour < 18) setGreeting('Afternoon');
         else setGreeting('Evening');
     }, []);
-
-    useEffect(() => {
-        const btn = document.getElementById(
-            (song.title + song.author).replace(/\s/g, '-')
-        );
-        song.playing
-            ? btn?.classList.add('pause')
-            : btn?.classList.remove('pause');
-    }, [song]);
 
     const switchTab = (target: string) => {
         if (target !== properties.activeTab)
@@ -31,10 +22,10 @@ const Home = ({ song, properties, handleChange }: any) => {
             <div className="col-3 mt-10">
                 <button
                     className="card p-10"
-                    onClick={() => switchTab('music')}
+                    onClick={() => switchTab('environment')}
                 >
-                    <h2 className="center-align">{MusicOutline()}</h2>
-                    <p className="center-align">Music</p>
+                    <h2 className="center-align">{License()}</h2>
+                    <p className="center-align">Data</p>
                 </button>
                 <button
                     className="card p-10"
@@ -42,10 +33,6 @@ const Home = ({ song, properties, handleChange }: any) => {
                 >
                     <h2 className="center-align">{SettingsOutline()}</h2>
                     <p className="center-align">Settings</p>
-                </button>
-                <button className="card p-10">
-                    <h2 className="center-align">-</h2>
-                    <p className="center-align">Music</p>
                 </button>
             </div>
         </div>
