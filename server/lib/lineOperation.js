@@ -39,7 +39,7 @@ function validateKeywords(category, message) {
 
   if (category === "okay")
     key = ["ya", "sip", "yup", "ok", "ye", "thx", "thank", "tenks"];
-  if (category === "laugh") key = ["wk", "ha", "lol", "yey"];
+  if (category === "laugh") key = ["wk", "ha", "lol", "yey", "hepi"];
   if (category === "greetings") key = ["hi", "hello", "hey", "hola"];
   if (category === "goodbye") key = ["bye", "bai", "gn", "sd", "nite"];
 
